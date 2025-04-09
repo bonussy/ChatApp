@@ -24,6 +24,8 @@ io.on('connection', (socket) => {
         io.emit('message', data); // Broadcast message to all connected clients
     });
 
+    
+
     // Handle disconnection event
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);

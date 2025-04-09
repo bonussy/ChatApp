@@ -25,6 +25,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 
+
 // Start the server and Socket.io
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {

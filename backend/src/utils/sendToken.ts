@@ -1,12 +1,11 @@
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '../types/่jwt';
+import { JwtPayload } from '../types/jwt';
 
 export const sendTokenAsCookie = (
     res: Response,
     userPayload: JwtPayload,
-    statusCode: number,
-    message: string
+    statusCode: number
 ): void => {
     const token = jwt.sign(
         userPayload, 
@@ -22,5 +21,5 @@ export const sendTokenAsCookie = (
             sameSite: 'strict',
             maxAge: 24 * 60 * 60 * 1000, // 1 วัน
         })
-        .json({ message });
+        .json({ sucess: true, token });
 };

@@ -1,68 +1,17 @@
-// 'use client';
-
-// import React, { createContext, useContext, useEffect, useState } from 'react';
-// import { connectSocket, sendMessage as sendMessageToSocket, listenForMessages } from '../services/socketService';
-
-// interface SocketContextType {
-//   socket: any;
-//   messages: string[];
-//   sendMessage: (message: string) => void;
-// }  
-
-// const SocketContext = createContext<SocketContextType | undefined>(undefined);
-
-// export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-//   const [socket, setSocket] = useState<any>(null);
-//   const [messages, setMessages] = useState<string[]>([]);
-
-//   useEffect(() => {
-//     const socketConnection = connectSocket();
-//     setSocket(socketConnection);
-
-//     listenForMessages((message: string) => {
-//       setMessages((prevMessages) => [...prevMessages, message]);
-//     });
-
-//     return () => {
-//       socketConnection.disconnect();
-//     };
-//   }, []);
-
-//   const sendMessage = (message: string) => {
-//     if (socket) {
-//       sendMessageToSocket(message);
-//     }
-//   };
-
-//   return (
-//     <SocketContext.Provider value={{ socket, messages, sendMessage }}>
-//       {children}
-//     </SocketContext.Provider>
-//   );
-// };
-
-// export const useSocket = () => {
-//   const context = useContext(SocketContext);
-//   if (!context) {
-//     throw new Error('useSocket must be used within a SocketProvider');
-//   }
-//   return context;
-// };
-
-'use client';
+'ีuse client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 type SocketContextType = {
-  socket: Socket | null;
+  socket: Socket | null; 
   sendMessage: (message: string) => void;
-  messages: string[];
+  messages: string[]; //collect chat message
 };
 
 const SocketContext = createContext<SocketContextType>({
-  socket: null,
-  sendMessage: () => {},
+  socket: null, // no connection at beginning
+  sendMessage: () => {}, // update later
   messages: [],
 });
 
