@@ -1,7 +1,12 @@
-'use client'
+"use client";
+
+type Message = {
+  user: string;
+  text: string;
+}; 
 
 type Props = {
-    messages: string[];
+    messages: Message[];
   };
   
   export default function ChatBox({ messages }: Props) {
@@ -12,7 +17,7 @@ type Props = {
             key={idx}
             className="bg-blue-500 text-white p-3 rounded-xl max-w-[75%] self-end shadow"
           >
-            {msg}
+            <strong>{msg.user}:</strong> {msg.text}
           </div>
         ))}
       </div>

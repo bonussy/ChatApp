@@ -1,5 +1,11 @@
+"use client";
+
 import "./globals.css";
 import { SocketProvider } from '../context/SocketContext';
+import createEmotionCache from "@/utils/createEmotionCache";
+import ThemeRegistry from "@/components/ThemeRegistry";
+
+const clientSideEmotionCache = createEmotionCache();
 
 export default function RootLayout({
   children,
@@ -12,9 +18,21 @@ export default function RootLayout({
         <title>Chat App</title>
       </head>
       <body>
-        <SocketProvider>
-          {children}
-        </SocketProvider>
+        {/* <CacheProvider value={clientSideEmotionCache}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <CustomCssBaseline />
+              <SocketProvider>
+                {children}
+              </SocketProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </CacheProvider> */}
+        <ThemeRegistry>
+          <SocketProvider>
+            {children}
+          </SocketProvider>
+        </ThemeRegistry>
       </body>
     </html>
   );

@@ -1,16 +1,21 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { useSocket } from '@/context/SocketContext';
 
-export default function MessageInput() {
-  const { sendMessage } = useSocket();
-  const [input, setInput] = useState('');
+type Props = {
+  onSend: (text: string ) => void;
+};
+
+export default function MessageInput({ onSend }: Props) {
+  // const { sendMessage } = useSocket();
+  // const [input, setInput] = useState('');
+  const [text, setText] = useState<string>('');
 
   const handleSend = () => {
-    if (input.trim()) {
-      sendMessage(input);
-      setInput('');
+    if (text.trim()) {
+      onSend(text);
+      setText('');
     }
   };
 
@@ -19,8 +24,8 @@ export default function MessageInput() {
       <input
         className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none"
         placeholder="Type a message..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
       />
       <button

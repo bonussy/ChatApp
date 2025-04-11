@@ -16,12 +16,15 @@ connectDB();
 // Initialize Express app
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend URL
+    credentials: true, // Allow cookies to be sent
+}));
 app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
-console.log('Auth routes loaded');
+// console.log('Auth routes loaded');
 
 // Create HtTTP server
 const server = http.createServer(app);

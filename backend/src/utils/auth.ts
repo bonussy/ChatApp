@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/user';
 import { JwtPayload } from '../types/jwt';
+import { verifyToken } from './verifyToken';
 
 // Middleware for checking JWT token
 export const authenticate = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
@@ -12,14 +12,24 @@ export const authenticate = async (req: Request, res: Response, next:NextFunctio
     }
 
     try{
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload; 
+        const decoded = verifyToken(token);
+        if (!decoded) {
+            res.status(401).json({ success: false, message: 'Invalid token' });
+            return;
+        }
+
         const user = await User.findById(decoded.id).select('-password');
         if(!user) {
             res.status(401).json({  status: false, message: 'User not found' });
             return;
         }
-        console.log('Authenticated user:', user);
-        req.user = user; // Attach the user to the request object
+        //console.log('Authenticated user:', user);
+
+        // Cache user in req.user to avoid redundant database queries
+        if (!req.user) {
+            req.user = await User.findById(decoded.id).select('-password');
+        }
+
         next();
     } catch (error) {
         console.log('Token verification error:', error);
