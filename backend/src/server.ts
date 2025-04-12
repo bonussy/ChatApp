@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import initializeSocket from './socket';
+import userRoutes from './routes/userRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 // console.log('Auth routes loaded');
 
 // Create HtTTP server
