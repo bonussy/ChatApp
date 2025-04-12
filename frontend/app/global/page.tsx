@@ -1,14 +1,18 @@
 "use client";
 
-import React from "react";
+import ChatSection from "@/components/ChatSection";
 
 export default function GlobalPage() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Global Page</h1>
-      <p className="text-center">
-        This is the global page. Add your content here.
-      </p>
+
+return (
+    <div className="flex flex-col min-h-screen bg-gray-100 !p-4 gap-4">
+      <div className="h-16 w-full bg-white rounded-xl">Navbar</div>
+      <div className="flex flex-1 w-full gap-4">
+        <div className="w-1/4 bg-white rounded-xl">
+          Chat list
+        </div>
+        <ChatSection />
+      </div>
     </div>
   );
 }
