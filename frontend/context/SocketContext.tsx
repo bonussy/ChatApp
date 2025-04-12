@@ -6,6 +6,7 @@ import io, { Socket } from 'socket.io-client';
 type Message = {
   user: string;
   text: string;
+  timestamp: Date;
 };
 
 type SocketContextType = {
@@ -48,7 +49,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     newSocket.on('message', (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
-
+    
     return () => {
       console.log('Disconnecting socket...');
       newSocket.disconnect();

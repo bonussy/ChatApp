@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { verifyToken } from '../utils/verifyToken';
+import { time } from 'console';
 
 const initializeSocket = (server: HttpServer): void => {
     //Create Socket.io server instance
@@ -31,6 +32,7 @@ const initializeSocket = (server: HttpServer): void => {
             const messagePayload = {
                 user: sender, // Use the updated username
                 text: data.text,
+                timestamp: new Date()
             };
             console.log('Message received:', messagePayload);
             io.emit('message', messagePayload); // Broadcast message to all connected clients
