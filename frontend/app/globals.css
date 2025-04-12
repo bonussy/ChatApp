@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* styles/globals.css */
-@import "tailwindcss/preflight";
-@tailwind utilities;
+/* @import "tailwindcss/preflight";
+@tailwind utilities; */
 
 
 /* :root {

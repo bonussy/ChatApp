@@ -17,7 +17,7 @@ export default function RootLayout({
       <head>
         <title>Chat App</title>
       </head>
-      <body>
+      <body className="bg-gray-100">
         {/* <CacheProvider value={clientSideEmotionCache}>
           <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
@@ -28,11 +28,11 @@ export default function RootLayout({
             </ThemeProvider>
           </StyledEngineProvider>
         </CacheProvider> */}
-        <ThemeRegistry>
+        {/* <ThemeRegistry> */}
           <SocketProvider>
             {children}
           </SocketProvider>
-        </ThemeRegistry>
+        {/* </ThemeRegistry> */}
       </body>
     </html>
   );
