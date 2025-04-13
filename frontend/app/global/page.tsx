@@ -1,13 +1,9 @@
 "use client";
 
-import ChatSection from "@/components/ChatSection2";
+import ChatSection from "@/components/ChatSection";
 import React from "react";
-// import ChatMessages from "./ChatMessages";
-// import MessageInput from '@/components/MessageInput';
-// import LogoutButton from '@/components/LogoutButton';
 import { useSocket } from "@/context/SocketContext";
 import { useUser } from '@/hooks/useUser';
-// import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
@@ -18,12 +14,10 @@ interface userDataToEmit {
 }
 
 export default function GlobalPage() {
-  const { messages, sendMessage, sendReaction, socket } = useSocket();
+  const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [guestUsername, setGuestUsername] = useState<string>("");
-  // const [email, setEmail] = useState<string>("");
   const [userDataToEmit, setUserDataToEmit] = useState<userDataToEmit | null>(null);
-  // const hasFetchedRef = useRef(false);
 
   useEffect(() => {
 
@@ -33,7 +27,6 @@ export default function GlobalPage() {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
-        // setEmail(response.data.user.email); 
         console.log("User fetched successfully:", response.data.user);
 
       } catch (err: any) {
@@ -42,7 +35,6 @@ export default function GlobalPage() {
         // Generate a random guest username
         const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
         setGuestUsername(randomGuestUsername);
-        // setEmail(randomGuestUsername);
         console.log("Generated guest username:", randomGuestUsername);
       }
     };
@@ -74,8 +66,6 @@ return (
           Chat list
         </div>
         <ChatSection 
-          // username={nameToEmit} 
-          // email={email}
           userId={userDataToEmit ? userDataToEmit.id : ""}
           chatId="global"
           globalUserData={userDataToEmit}

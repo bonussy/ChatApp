@@ -1,26 +1,17 @@
 "use client";
 
-import ChatSection from "@/components/ChatSection2";
+import ChatSection from "@/components/ChatSection";
 import React from "react";
-// import ChatMessages from "./ChatMessages";
-// import MessageInput from '@/components/MessageInput';
-// import LogoutButton from '@/components/LogoutButton';
 import { useSocket } from '@/context/SocketContext';
 import { useUser } from '@/hooks/useUser';
-// import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 export default function GeneralPage() {
-  const { messages, sendMessage, sendReaction, socket } = useSocket();
+  const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
-  // const [guestUsername, setGuestUsername] = useState<string>("");
-  // const [email, setEmail] = useState<string>("");
-  // const [nameToEmit, setNameToEmit] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
-  // const [userId, setUserId] = useState<string>("");
   const [chatId, setChatId] = useState<string>("67fb83e9a40040fd8ff1d680");
-  // const hasFetchedRef = useRef(false);
 
   useEffect(() => {
 
@@ -30,19 +21,10 @@ export default function GeneralPage() {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
-        // console.log("fetch2:", response.data.user);
-        // setEmail(response.data.user.email); 
-        // setUserId(response.data.user._id); 
         console.log("User fetched successfully:", response.data.user);
 
       } catch (err: any) {
         console.log("Failed to fetch user:", err.response?.data?.message || err.message);
-        
-        // Generate a random guest username
-        // const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
-        // setGuestUsername(randomGuestUsername);
-        // setEmail(randomGuestUsername);
-        // console.log("Generated guest username:", randomGuestUsername);
       }
     };
 
@@ -52,13 +34,6 @@ export default function GeneralPage() {
   useEffect(() => {
     if (user?._id) setUserId(user._id);
   }, [user?._id]);
-
-  // useEffect(() => {
-  //   if (socket && socket.connected && nameToEmit) {
-  //     console.log("Emitting username:", nameToEmit);
-  //     socket.emit("set-username", nameToEmit);
-  //   }
-  // }, [socket?.connected, nameToEmit]);
 
   if (loading) {
     return <div>Loading...</div>;
