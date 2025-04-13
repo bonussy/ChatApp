@@ -36,7 +36,8 @@ type Props = {
   // allMessages: Message[];
   // setAllMessages: (messages: Message[]) => void;
   messages: Message[];
-  setAllMessages: (messages: Message[]) => void;
+  // setMessages: (messages: Message[]) => void;
+  globalUserData?: any;
   sendReaction: (payload: {
     messageId: string;
     emoji: string;
@@ -58,7 +59,15 @@ const formatDate = (timestamp: Date): string => {
     .toUpperCase();
 };
 
-export default function ChatMessages({ userId, allMessages, setAllMessages, messages, sendReaction }: Props) {
+const icons = [
+  { id: "icon1", src: "/profile/blue_paw.svg", alt: "Icon 1" },
+  { id: "icon2", src: "/profile/green_paw.svg", alt: "Icon 2" },
+  { id: "icon3", src: "/profile/purple_paw.svg", alt: "Icon 3" },
+  { id: "icon4", src: "/profile/red_paw.svg", alt: "Icon 4" },
+  { id: "icon5", src: "/profile/yellow_paw.svg", alt: "Icon 5" },
+];
+
+export default function ChatMessages({ userId, messages, globalUserData, sendReaction }: Props) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -106,17 +115,19 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
         });
       }
 
-      try {
-        const response = await axios.post("http://localhost:3001/api/messages/toggleReaction", {
-          messageId: targetMessageIdx,
-          emoji,
-          userId,
-        }, {
-          withCredentials: true,
-        });
-        console.log("Reaction sent successfully:", response.data.message);
-      } catch (err: any) {
-        console.log("Failed to send reaction:", err.response?.data?.message || err.message);
+      if (!globalUserData) {
+        try {
+          const response = await axios.post("http://localhost:3001/api/messages/toggleReaction", {
+            messageId: targetMessageIdx,
+            emoji,
+            userId,
+          }, {
+            withCredentials: true,
+          });
+          console.log("Reaction sent successfully:", response.data.message);
+        } catch (err: any) {
+          console.log("Failed to send reaction:", err.response?.data?.message || err.message);
+        }
       }
 
       setShowEmojiPicker(false);
@@ -138,8 +149,8 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
         return (
           <div
             key={idx}
-            className={`flex flex-col w-fit max-w-[75%] ${
-              isUser ? "self-end items-end" : "self-start items-start"
+            className={`flex gap-2 w-fit max-w-[75%] ${
+              isUser ? "self-end flex-row-reverse items-end" : "self-start items-start"
             }`}
             onContextMenu={(e) => {
               e.preventDefault();
@@ -147,32 +158,45 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
               setTargetMessageIdx(msg._id);
             }}
           >
-            <div className="flex justify-between w-full text-gray-500 gap-2">
-              <span className="font-bold text-gray-600">
-                {isUser ? "You" : msg.sender.username}
-              </span>
-              <span>{formatDate(msg.timestamp)}</span>
-            </div>
-            <div
-              className={`py-2 px-4 rounded-xl ${
-                isUser
-                  ? "bg-[#e1f1f8] rounded-tr-none"
-                  : "bg-gray-200 rounded-tl-none"
-              } text-black`}
-            >
-              {msg.text}
-              {msg.reactions && (
-                <div className="flex gap-2 mt-2 text-sm">
-                  { Object.entries(msg.reactions).filter(([emoji, users]) => users.length > 0).map(([emoji, users]) => ( 
-                    <span
-                      key={emoji}
-                      className="px-2 py-1 bg-white rounded-full border text-black"
-                    >
-                      {emoji} {users.length}
-                    </span>
-                  ))}
-                </div>
-              )}
+
+            {!isUser && (
+              <img
+                src={icons.find((icon) => icon.id === msg.sender.profileIcon)?.src}  
+                alt={`${msg.sender.username} icon`}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+
+            <div className="flex flex-col">
+              <div className="flex justify-between w-full text-gray-500 gap-2">
+                <span className="font-bold text-gray-600">
+                  {isUser ? "You" : msg.sender.username}
+                </span>
+                <span>{formatDate(msg.timestamp)}</span>
+              </div>
+              <div
+                className={`py-2 px-4 rounded-xl ${
+                  isUser
+                    ? "bg-[#e1f1f8] rounded-tr-none"
+                    : "bg-gray-200 rounded-tl-none"
+                } text-black`}
+              >
+                {msg.text}
+                {msg.reactions && (
+                  <div className="flex gap-2 mt-2 text-sm">
+                    {Object.entries(msg.reactions)
+                      .filter(([_, users]) => users.length > 0)
+                      .map(([emoji, users]) => (
+                        <span
+                          key={emoji}
+                          className="px-2 py-1 bg-white rounded-full border text-black"
+                        >
+                          {emoji} {users.length}
+                        </span>
+                      ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         );

@@ -10,6 +10,7 @@ import { useSocket } from '@/context/SocketContext';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BsFillPeopleFill } from "react-icons/bs";
+import { FaGlobeAsia } from "react-icons/fa";
 
 type Message = {
   _id: string;
@@ -26,10 +27,9 @@ type Message = {
   };
 };
 
-export default function ChatSection({ userId, chatId }: { userId: string, chatId: string }) {
+export default function ChatSection({ userId, chatId, globalUserData }: { userId: string, chatId: string, globalUserData?: any }) {
   const { messages, sendMessage, sendReaction, socket, setMessages } = useSocket();
   // const [allMessages, setAllMessages] = useState<Message[]>([]);
-  const [latestMessage, setLatestMessage] = useState(null);
 
   useEffect(() => {
 
@@ -58,8 +58,8 @@ export default function ChatSection({ userId, chatId }: { userId: string, chatId
 return (
     <div className="flex flex-1 flex-col h-full w-3/4 bg-white rounded-xl">
         <div className="flex items-center p-4 border-b border-gray-200 text-xl font-bold">
-          <BsFillPeopleFill className="inline-block mr-2" />
-          General Chat ({chatId})
+          { (chatId != "global") ? <BsFillPeopleFill className="inline-block mr-2" /> : <FaGlobeAsia className="inline-block mr-2" />}
+          { (chatId != "global") ? `General Chat (${chatId})` : "Global Chat"}
         </div>
         <ChatMessages 
           // username={username} 
@@ -68,15 +68,16 @@ return (
           // allMessages={allMessages}
           // setAllMessages={setAllMessages}
           messages={messages}
-          setAllMessages={setMessages}
+          globalUserData={globalUserData}
+          // setMessages={setMessages}
           sendReaction={sendReaction}
         />
         <MessageInput 
           userId={userId}
           chatId={chatId}
+          globalUserData={globalUserData}
           // onSend={(text) => sendMessage({ text, chatId, senderId: userId })}
           onSend={sendMessage}
-          setLatestMessage={setLatestMessage}
         />
     </div>
   );

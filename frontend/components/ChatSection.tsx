@@ -4,7 +4,7 @@ import React from "react";
 import ChatMessages from "./ChatMessages";
 import MessageInput from '@/components/MessageInput';
 // import LogoutButton from '@/components/LogoutButton';
-import { useSocket } from '@/context/SocketContext';
+import { useSocket } from "@/context/SocketContext";
 // import { useUser } from '@/hooks/useUser';
 // import { useRouter } from "next/navigation";
 // import { useEffect, useRef, useState } from 'react';
@@ -66,13 +66,13 @@ return (
           Global Chat ({username})
         </div>
         {/* <ChatMessages messages={messages} username={username} /> */}
-        <ChatMessages 
+        {/* <ChatMessages 
           username={username} 
           email={email}
           messages={messages}
           sendReaction={sendReaction}
-        />
-        <MessageInput onSend={(text) => sendMessage({ text })} />
+        /> */}
+        {/* <MessageInput onSend={(text) => sendMessage({ text })} /> */}
     </div>
   );
 }

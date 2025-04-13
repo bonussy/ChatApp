@@ -8,30 +8,45 @@ import axios from 'axios';
 type Props = {
   userId: string;
   chatId: string;
+  globalUserData?: any;
   // onSend: (text: string ) => void;
   onSend: (message: any) => void;
-  setLatestMessage: (message: any) => void;
 };
 
-export default function MessageInput({ userId, chatId, onSend, setLatestMessage }: Props) {
+export default function MessageInput({ userId, chatId, globalUserData, onSend }: Props) {
   // const { sendMessage } = useSocket();
   // const [input, setInput] = useState('');
   const [text, setText] = useState<string>('');
 
   const postMessage = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/messages", {
-        senderId: userId,
-        chatId: chatId,
-        text,
-      }, {
-        withCredentials: true,
-      }); 
+      if (chatId !== "global") {
+        const response = await axios.post("http://localhost:3001/api/messages", {
+          senderId: userId,
+          chatId: chatId,
+          text,
+        }, {
+          withCredentials: true,
+        }); 
 
-      // setUser(response.data.user); // Update user state
-      console.log("Message posted successfully:", response.data.data);
-      setLatestMessage(response.data.data); // Update latest message state
-      onSend(response.data.data); // Send the message to the parent component
+        // setUser(response.data.user); // Update user state
+        console.log("Message posted successfully:", response.data.data);
+        onSend(response.data.data); // Send the message to the parent component
+      } else {
+        onSend({
+          _id: "global" + Math.floor(Math.random() * 1000000),
+          sender: {
+            _id: globalUserData.id,
+            username: globalUserData.username,
+            profileIcon: globalUserData.profileIcon,
+          },
+          chat: "global",
+          text: text,
+          timestamp: new Date(),
+          reactions: {},
+        });
+      }
+
     } catch (err: any) {
       console.log("Failed to post message:", err.response?.data?.message || err.message, "\nUser ID:", userId, "\nChat ID:", chatId);
       

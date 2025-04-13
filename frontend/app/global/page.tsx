@@ -1,6 +1,6 @@
 "use client";
 
-import ChatSection from "@/components/ChatSection";
+import ChatSection from "@/components/ChatSection2";
 import React from "react";
 // import ChatMessages from "./ChatMessages";
 // import MessageInput from '@/components/MessageInput';
@@ -11,12 +11,18 @@ import { useUser } from '@/hooks/useUser';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
+interface userDataToEmit {
+  id: string;
+  username: string;
+  profileIcon: string;
+}
+
 export default function GlobalPage() {
   const { messages, sendMessage, sendReaction, socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [guestUsername, setGuestUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [nameToEmit, setNameToEmit] = useState<string>("");
+  // const [email, setEmail] = useState<string>("");
+  const [userDataToEmit, setUserDataToEmit] = useState<userDataToEmit | null>(null);
   // const hasFetchedRef = useRef(false);
 
   useEffect(() => {
@@ -27,7 +33,7 @@ export default function GlobalPage() {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
-        setEmail(response.data.user.email); 
+        // setEmail(response.data.user.email); 
         console.log("User fetched successfully:", response.data.user);
 
       } catch (err: any) {
@@ -36,7 +42,7 @@ export default function GlobalPage() {
         // Generate a random guest username
         const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
         setGuestUsername(randomGuestUsername);
-        setEmail(randomGuestUsername);
+        // setEmail(randomGuestUsername);
         console.log("Generated guest username:", randomGuestUsername);
       }
     };
@@ -45,16 +51,16 @@ export default function GlobalPage() {
   }, [socket]);
 
   useEffect(() => {
-    if (user?.username) setNameToEmit(user.username);
-    else if (guestUsername) setNameToEmit(guestUsername);
+    if (user?.username) setUserDataToEmit({ "id": user._id, "username": user.username, "profileIcon": user.profileIcon });  // username);
+    else if (guestUsername) setUserDataToEmit({ "id": guestUsername, "username": guestUsername, "profileIcon": "icon" + (Math.floor(Math.random() * 5) + 1) });
   }, [user?.username, guestUsername]);
 
   useEffect(() => {
-    if (socket && socket.connected && nameToEmit) {
-      console.log("Emitting username:", nameToEmit);
-      socket.emit("set-username", nameToEmit);
+    if (socket && socket.connected && userDataToEmit) {
+      console.log("Emitting user data:", userDataToEmit);
+      // socket.emit("set-username", userDataToEmit);
     }
-  }, [socket?.connected, nameToEmit]);
+  }, [socket?.connected, userDataToEmit]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -68,8 +74,11 @@ return (
           Chat list
         </div>
         <ChatSection 
-          username={nameToEmit} 
-          email={email}
+          // username={nameToEmit} 
+          // email={email}
+          userId={userDataToEmit ? userDataToEmit.id : ""}
+          chatId="global"
+          globalUserData={userDataToEmit}
         />
       </div>
     </div>
