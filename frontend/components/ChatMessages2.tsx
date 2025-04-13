@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 // Message type
 // type Message = {
@@ -94,16 +95,30 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
 
   // emoji select handler
   useEffect(() => {
-    const handleEmojiClick = (e: any) => {
+    const handleEmojiClick = async (e: any) => {
       const emoji = e.detail.unicode;
       if (targetMessageIdx !== null) {
         // onReact(targetMessageIdx, emoji);
-        // sendReaction({
-        //   messageId: targetMessageIdx,
-        //   emoji,
-        //   userId
-        // });
+        sendReaction({
+          messageId: targetMessageIdx,
+          emoji,
+          userId
+        });
       }
+
+      try {
+        const response = await axios.post("http://localhost:3001/api/messages/toggleReaction", {
+          messageId: targetMessageIdx,
+          emoji,
+          userId,
+        }, {
+          withCredentials: true,
+        });
+        console.log("Reaction sent successfully:", response.data.message);
+      } catch (err: any) {
+        console.log("Failed to send reaction:", err.response?.data?.message || err.message);
+      }
+
       setShowEmojiPicker(false);
       setTargetMessageIdx(null);
     };
@@ -148,7 +163,7 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
               {msg.text}
               {msg.reactions && (
                 <div className="flex gap-2 mt-2 text-sm">
-                  {Object.entries(msg.reactions).map(([emoji, users]) => (
+                  { Object.entries(msg.reactions).filter(([emoji, users]) => users.length > 0).map(([emoji, users]) => ( 
                     <span
                       key={emoji}
                       className="px-2 py-1 bg-white rounded-full border text-black"
