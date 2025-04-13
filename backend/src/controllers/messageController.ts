@@ -28,13 +28,40 @@ export const getMessagesByChatId = async (req: Request, res: Response): Promise<
     }
 };
 
+// export const createMessage = async (req: Request, res: Response): Promise<void> => {
+//     const { senderId, chatId, text } = req.body;
+//     console.log("Creating message with \n\tSender ID:", senderId, "\n\tChat ID:", chatId, "\n\tText:", text); // Debugging line
+//     await Message.create({ sender: senderId, chat: chatId, text });
+
+//     res.status(201).json({ success: true, message: 'Create message successful. Enjoy!' });
+// };
+
 export const createMessage = async (req: Request, res: Response): Promise<void> => {
     const { senderId, chatId, text } = req.body;
     console.log("Creating message with \n\tSender ID:", senderId, "\n\tChat ID:", chatId, "\n\tText:", text); // Debugging line
-    await Message.create({ sender: senderId, chat: chatId, text });
-
-    res.status(201).json({ success: true, message: 'Create message successful. Enjoy!' });
-};
+  
+    try {
+      // Step 1: Create the message
+      const newMessage = await Message.create({ sender: senderId, chat: chatId, text });
+  
+      // Step 2: Populate sender info
+      await newMessage.populate('sender', 'username profileIcon');
+  
+      // Step 3: Return the populated message
+      res.status(201).json({
+        success: true,
+        message: 'Create message successful. Enjoy!',
+        data: newMessage,
+      });
+  
+    } catch (error: any) {
+      console.error("Failed to create message:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Something went wrong',
+      });
+    }
+  };
 
 export const toggleMessageReaction = async (req: Request, res: Response): Promise<void> => {
     try {

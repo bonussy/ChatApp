@@ -3,13 +3,28 @@
 import { useState, useEffect, useRef } from "react";
 
 // Message type
+// type Message = {
+//   _id: string;
+//   user: string;
+//   text: string;
+//   timestamp: Date;
+//   reactions?: {
+//     [emoji: string]: string[]; // emoji: array of emails who reacted
+//   };
+// };
+
 type Message = {
-  id: string;
-  user: string;
+  _id: string;
+  sender: {
+    _id: string;
+    username: string;
+    profileIcon: string;
+  }
+  chat: string; // chatId
   text: string;
   timestamp: Date;
   reactions?: {
-    [emoji: string]: string[]; // emoji: array of emails who reacted
+    [emoji: string]: string[]; // emoji: array of userIds who reacted
   };
 };
 
@@ -17,13 +32,14 @@ type Props = {
   // username: string;
   // email: string;
   userId: string;
-  allMessages: Message[];
-  setAllMessages: (messages: Message[]) => void;
+  // allMessages: Message[];
+  // setAllMessages: (messages: Message[]) => void;
   messages: Message[];
+  setAllMessages: (messages: Message[]) => void;
   sendReaction: (payload: {
     messageId: string;
     emoji: string;
-    email: string;
+    userId: string;
   }) => void; // new prop
   // onReact?: (messageIndex: number, emoji: string) => void; // new prop
 };
@@ -82,11 +98,11 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
       const emoji = e.detail.unicode;
       if (targetMessageIdx !== null) {
         // onReact(targetMessageIdx, emoji);
-        sendReaction({
-          messageId: targetMessageIdx,
-          emoji,
-          email: email,
-        });
+        // sendReaction({
+        //   messageId: targetMessageIdx,
+        //   emoji,
+        //   userId
+        // });
       }
       setShowEmojiPicker(false);
       setTargetMessageIdx(null);
@@ -102,7 +118,7 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
   return (
     <div className="flex flex-col h-full gap-4 p-6 overflow-y-auto flex-1 rounded-xl relative">
       {messages.map((msg, idx) => {
-        const isUser = msg.user === username;
+        const isUser = msg.sender._id === userId;
 
         return (
           <div
@@ -113,12 +129,12 @@ export default function ChatMessages({ userId, allMessages, setAllMessages, mess
             onContextMenu={(e) => {
               e.preventDefault();
               setShowEmojiPicker(true);
-              setTargetMessageIdx(msg.id);
+              setTargetMessageIdx(msg._id);
             }}
           >
             <div className="flex justify-between w-full text-gray-500 gap-2">
               <span className="font-bold text-gray-600">
-                {isUser ? "You" : msg.user}
+                {isUser ? "You" : msg.sender.username}
               </span>
               <span>{formatDate(msg.timestamp)}</span>
             </div>

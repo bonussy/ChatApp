@@ -8,10 +8,12 @@ import axios from 'axios';
 type Props = {
   userId: string;
   chatId: string;
-  onSend: (text: string ) => void;
+  // onSend: (text: string ) => void;
+  onSend: (message: any) => void;
+  setLatestMessage: (message: any) => void;
 };
 
-export default function MessageInput({ userId, chatId, onSend }: Props) {
+export default function MessageInput({ userId, chatId, onSend, setLatestMessage }: Props) {
   // const { sendMessage } = useSocket();
   // const [input, setInput] = useState('');
   const [text, setText] = useState<string>('');
@@ -27,8 +29,9 @@ export default function MessageInput({ userId, chatId, onSend }: Props) {
       }); 
 
       // setUser(response.data.user); // Update user state
-      // console.log("Message posted successfully:", response.data.messages);
-
+      console.log("Message posted successfully:", response.data.data);
+      setLatestMessage(response.data.data); // Update latest message state
+      onSend(response.data.data); // Send the message to the parent component
     } catch (err: any) {
       console.log("Failed to post message:", err.response?.data?.message || err.message, "\nUser ID:", userId, "\nChat ID:", chatId);
       
@@ -40,7 +43,7 @@ export default function MessageInput({ userId, chatId, onSend }: Props) {
 
   const handleSend = () => {
     if (text.trim()) {
-      onSend(text);
+      // onSend(text);
       postMessage();
       setText('');
     }

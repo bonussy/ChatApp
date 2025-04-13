@@ -12,18 +12,24 @@ import axios from 'axios';
 import { BsFillPeopleFill } from "react-icons/bs";
 
 type Message = {
-  id: string;
-  user: string;
+  _id: string;
+  sender: {
+    _id: string;
+    username: string;
+    profileIcon: string;
+  }
+  chat: string; // chatId
   text: string;
   timestamp: Date;
   reactions?: {
-    [emoji: string]: string[]; // emoji: array of emails who reacted
+    [emoji: string]: string[]; // emoji: array of userIds who reacted
   };
 };
 
 export default function ChatSection({ userId, chatId }: { userId: string, chatId: string }) {
-  const { messages, sendMessage, sendReaction, socket } = useSocket();
-  const [allMessages, setAllMessages] = useState<Message[]>([]);
+  const { messages, sendMessage, sendReaction, socket, setMessages } = useSocket();
+  // const [allMessages, setAllMessages] = useState<Message[]>([]);
+  const [latestMessage, setLatestMessage] = useState(null);
 
   useEffect(() => {
 
@@ -35,8 +41,8 @@ export default function ChatSection({ userId, chatId }: { userId: string, chatId
           withCredentials: true,
         });
         console.log("Messages fetched successfully:", response.data.messages);
-        setAllMessages(response.data.messages); // Update messages state
-
+        // setAllMessages(response.data.messages); // Update messages state
+        setMessages(response.data.messages); // Update messages state
       } catch (err: any) {
         console.log("Failed to fetch messages:", err.response?.data?.message || err.message, "\nChat ID:", chatId);
       }
@@ -44,6 +50,10 @@ export default function ChatSection({ userId, chatId }: { userId: string, chatId
 
     fetchMessagesByChatId();
   }, [chatId]);
+
+  useEffect(() => {
+    console.log("All messages:", messages);
+  }, [messages]);
 
 return (
     <div className="flex flex-1 flex-col h-full w-3/4 bg-white rounded-xl">
@@ -55,15 +65,18 @@ return (
           // username={username} 
           // email={email}
           userId={userId}
-          allMessages={allMessages}
-          setAllMessages={setAllMessages}
+          // allMessages={allMessages}
+          // setAllMessages={setAllMessages}
           messages={messages}
+          setAllMessages={setMessages}
           sendReaction={sendReaction}
         />
         <MessageInput 
           userId={userId}
           chatId={chatId}
-          onSend={(text) => sendMessage({ text })} 
+          // onSend={(text) => sendMessage({ text, chatId, senderId: userId })}
+          onSend={sendMessage}
+          setLatestMessage={setLatestMessage}
         />
     </div>
   );
