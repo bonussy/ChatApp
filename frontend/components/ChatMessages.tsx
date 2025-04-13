@@ -9,12 +9,13 @@ type Message = {
   text: string;
   timestamp: Date;
   reactions?: {
-    [emoji: string]: string[]; // emoji: array of usernames who reacted
+    [emoji: string]: string[]; // emoji: array of emails who reacted
   };
 };
 
 type Props = {
   username: string;
+  email: string;
   messages: Message[];
   sendReaction: (payload: {
     messageId: string;
@@ -37,7 +38,7 @@ const formatDate = (timestamp: Date): string => {
     .toUpperCase();
 };
 
-export default function ChatMessages({ username, messages, sendReaction }: Props) {
+export default function ChatMessages({ username, email, messages, sendReaction }: Props) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -81,7 +82,7 @@ export default function ChatMessages({ username, messages, sendReaction }: Props
         sendReaction({
           messageId: targetMessageIdx,
           emoji,
-          email: username,
+          email: email,
         });
       }
       setShowEmojiPicker(false);

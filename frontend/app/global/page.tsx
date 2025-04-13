@@ -44,22 +44,17 @@ export default function GlobalPage() {
     fetchUserAndEmitUsername();
   }, [socket]);
 
-  // useEffect(() => {
-  //   if (socket && socket.connected && user?.username) {
-  //     console.log("Socket connected, emitting username:", user.username);
-  //     socket.emit("set-username", user.username);
-  //   }
-  // }, [socket, socket?.connected, user?.username]);
+  useEffect(() => {
+    if (user?.username) setNameToEmit(user.username);
+    else if (guestUsername) setNameToEmit(guestUsername);
+  }, [user?.username, guestUsername]);
 
   useEffect(() => {
-    if (socket && socket.connected) {
-      setNameToEmit(user?.username || guestUsername);
-      if (nameToEmit) {
-        console.log("Socket connected, emitting username:", nameToEmit);
-        socket.emit("set-username", nameToEmit);
-      }
+    if (socket && socket.connected && nameToEmit) {
+      console.log("Emitting username:", nameToEmit);
+      socket.emit("set-username", nameToEmit);
     }
-  }, [socket, socket?.connected, user?.username, guestUsername]);
+  }, [socket?.connected, nameToEmit]);
 
   if (loading) {
     return <div>Loading...</div>;

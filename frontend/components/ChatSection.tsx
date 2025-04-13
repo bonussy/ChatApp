@@ -68,6 +68,7 @@ return (
         {/* <ChatMessages messages={messages} username={username} /> */}
         <ChatMessages 
           username={username} 
+          email={email}
           messages={messages}
           sendReaction={sendReaction}
         />

@@ -60,7 +60,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       setMessages((prev) => [...prev, message]);
     });
 
-    newSocket.on("message:reaction", ({ messageId, emoji, username }) => {
+    newSocket.on("message:reaction", ({ messageId, emoji, email }) => {
       setMessages((prevMessages) => {
         return prevMessages.map((msg) => {
           if (msg.id !== messageId) return msg;
@@ -68,13 +68,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           const updatedReactions = { ...msg.reactions };
           const userList = updatedReactions[emoji] || [];
     
-          if (userList.includes(username)) {
-            updatedReactions[emoji] = userList.filter((u) => u !== username);
+          if (userList.includes(email)) {
+            updatedReactions[emoji] = userList.filter((u) => u !== email);
             if (updatedReactions[emoji].length === 0) {
               delete updatedReactions[emoji];
             }
           } else {
-            updatedReactions[emoji] = [...userList, username];
+            updatedReactions[emoji] = [...userList, email];
           }
     
           return { ...msg, reactions: updatedReactions };
