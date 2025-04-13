@@ -1,14 +1,83 @@
 "use client";
 
+import ChatSection from "@/components/ChatSection2";
 import React from "react";
+// import ChatMessages from "./ChatMessages";
+// import MessageInput from '@/components/MessageInput';
+// import LogoutButton from '@/components/LogoutButton';
+import { useSocket } from '@/context/SocketContext';
+import { useUser } from '@/hooks/useUser';
+// import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 
 export default function GeneralPage() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">General Page</h1>
-      <p className="text-center">
-        Welcome to the General Page. Add your content here.
-      </p>
+  const { messages, sendMessage, sendReaction, socket } = useSocket();
+  const { user, loading, setUser } = useUser(false);
+  // const [guestUsername, setGuestUsername] = useState<string>("");
+  // const [email, setEmail] = useState<string>("");
+  // const [nameToEmit, setNameToEmit] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  // const [userId, setUserId] = useState<string>("");
+  const [chatId, setChatId] = useState<string>("67fb83e9a40040fd8ff1d680");
+  // const hasFetchedRef = useRef(false);
+
+  useEffect(() => {
+
+    const fetchUserAndEmitUsername = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/api/auth/me", {
+          withCredentials: true,
+        });
+        setUser(response.data.user); // Update user state
+        // console.log("fetch2:", response.data.user);
+        // setEmail(response.data.user.email); 
+        // setUserId(response.data.user._id); 
+        console.log("User fetched successfully:", response.data.user);
+
+      } catch (err: any) {
+        console.log("Failed to fetch user:", err.response?.data?.message || err.message);
+        
+        // Generate a random guest username
+        // const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
+        // setGuestUsername(randomGuestUsername);
+        // setEmail(randomGuestUsername);
+        // console.log("Generated guest username:", randomGuestUsername);
+      }
+    };
+
+    fetchUserAndEmitUsername();
+  }, [socket]);
+
+  useEffect(() => {
+    if (user?._id) setUserId(user._id);
+  }, [user?._id]);
+
+  // useEffect(() => {
+  //   if (socket && socket.connected && nameToEmit) {
+  //     console.log("Emitting username:", nameToEmit);
+  //     socket.emit("set-username", nameToEmit);
+  //   }
+  // }, [socket?.connected, nameToEmit]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+return (
+    <div className="flex flex-col h-screen bg-gray-100 p-4 gap-4">
+      <div className="h-16 w-full bg-white rounded-xl">Navbar</div>
+      <div className="flex flex-1 w-full gap-4 overflow-hidden">
+        <div className="h-full w-1/4 bg-white rounded-xl">
+          Chat list <br />
+          (UserId: {userId}) <br />
+          (chatId: {chatId})
+        </div>
+        <ChatSection 
+          userId={userId || ""} 
+          chatId={chatId}
+        />
+      </div>
     </div>
   );
 }
