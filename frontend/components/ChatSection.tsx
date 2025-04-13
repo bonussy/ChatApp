@@ -11,8 +11,8 @@ import { useSocket } from '@/context/SocketContext';
 // import axios from 'axios';
 import { FaGlobeAsia } from "react-icons/fa";
 
-export default function ChatSection({ username }: { username: string }) {
-  const { messages, sendMessage, socket } = useSocket();
+export default function ChatSection({ username, email }: { username: string, email: string }) {
+  const { messages, sendMessage, sendReaction, socket } = useSocket();
   // const { user, loading, setUser } = useUser(false);
   // const [guestUsername, setGuestUsername] = useState<string>("");
   // const hasFetchedRef = useRef(false);
@@ -63,9 +63,14 @@ return (
     <div className="flex flex-1 flex-col h-full w-3/4 bg-white rounded-xl">
         <div className="flex items-center p-4 border-b border-gray-200 text-xl font-bold">
           <FaGlobeAsia className="inline-block mr-2" />
-          Global Chat
+          Global Chat ({username})
         </div>
-        <ChatMessages messages={messages} username={username} />
+        {/* <ChatMessages messages={messages} username={username} /> */}
+        <ChatMessages 
+          username={username} 
+          messages={messages}
+          sendReaction={sendReaction}
+        />
         <MessageInput onSend={(text) => sendMessage({ text })} />
     </div>
   );

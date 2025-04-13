@@ -12,9 +12,11 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 export default function GlobalPage() {
-  const { messages, sendMessage, socket } = useSocket();
+  const { messages, sendMessage, sendReaction, socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [guestUsername, setGuestUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [nameToEmit, setNameToEmit] = useState<string>("");
   // const hasFetchedRef = useRef(false);
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export default function GlobalPage() {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
+        setEmail(response.data.user.email); 
         console.log("User fetched successfully:", response.data.user);
 
       } catch (err: any) {
@@ -33,6 +36,7 @@ export default function GlobalPage() {
         // Generate a random guest username
         const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
         setGuestUsername(randomGuestUsername);
+        setEmail(randomGuestUsername);
         console.log("Generated guest username:", randomGuestUsername);
       }
     };
@@ -49,7 +53,7 @@ export default function GlobalPage() {
 
   useEffect(() => {
     if (socket && socket.connected) {
-      const nameToEmit = user?.username || guestUsername;
+      setNameToEmit(user?.username || guestUsername);
       if (nameToEmit) {
         console.log("Socket connected, emitting username:", nameToEmit);
         socket.emit("set-username", nameToEmit);
@@ -68,7 +72,10 @@ return (
         <div className="h-full w-1/4 bg-white rounded-xl">
           Chat list
         </div>
-        <ChatSection username={user?.username ? user.username : guestUsername} />
+        <ChatSection 
+          username={nameToEmit} 
+          email={email}
+        />
       </div>
     </div>
   );
