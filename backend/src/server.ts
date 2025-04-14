@@ -7,8 +7,8 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import initializeSocket from './socket';
 import userRoutes from './routes/userRoutes';
+import messageRoutes from './routes/messageRouts';
 import chatRoutes from './routes/chatRoutes';
-
 // Load environment variables
 dotenv.config();
 
@@ -27,6 +27,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/chat', chatRoutes);
 // console.log('Auth routes loaded');
 

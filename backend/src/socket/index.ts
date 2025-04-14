@@ -1,6 +1,9 @@
 import { Server } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { verifyToken } from '../utils/verifyToken';
+import { time } from 'console';
+import { v4 as uuidv4 } from 'uuid';
+import Message from '../models/messages';
 
 const initializeSocket = (server: HttpServer): void => {
     //Create Socket.io server instance
@@ -28,12 +31,21 @@ const initializeSocket = (server: HttpServer): void => {
         // Handle "message" event
         socket.on('message', (data) => {
             const sender = username ?? `Guest`;
-            const messagePayload = {
-                user: sender, // Use the updated username
-                text: data.text,
-            };
+            // const messagePayload = {
+            //     id: uuidv4(),
+            //     user: sender, // Use the updated username
+            //     text: data.text,
+            //     timestamp: new Date()
+            // };
+            const messagePayload = data;
             console.log('Message received:', messagePayload);
             io.emit('message', messagePayload); // Broadcast message to all connected clients
+        });          
+
+        // Handle "reaction" event
+        socket.on('message:reaction', ({ messageId, emoji, userId }) => { 
+            console.log('Reaction received:', { messageId, emoji, userId });
+            io.emit('message:reaction', { messageId, emoji, userId }); // Broadcast reaction to all connected clients
         });
 
         // Handle disconnection event
