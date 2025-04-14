@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/chat', chatRoutes);
+app.use('/api/chat', chatRoutes);
 // console.log('Auth routes loaded');
 
 // Create HtTTP server

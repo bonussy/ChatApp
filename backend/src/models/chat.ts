@@ -5,6 +5,7 @@ interface IChat extends Document {
     name: string;
     members: Types.ObjectId[];
     isGroupChat: boolean;
+    groupIcon: string;
     createdAt: Date;
 }
 
@@ -23,6 +24,10 @@ const ChatSchema: Schema<IChat> = new Schema({
     isGroupChat: {
         type: Boolean,
         required: true,
+    },
+    groupIcon: {
+        type: String,
+        required: false,
     },
     createdAt: {
         type: Date,

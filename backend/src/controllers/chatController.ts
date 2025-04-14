@@ -2,10 +2,14 @@ import { Request, Response } from 'express';
 import Chat from '../models/chat';
 
 export const getChats = async (req: Request, res: Response): Promise<void> => {
-    // console.log(req.query.group)
+    console.log(req.query)
+    
     try {
-        let filter = {}
-        if(req.query.group) filter = { isGroupChat: req.query.group }
+        let filter:any = {}
+        if(req.query.group) filter.isGroupChat = req.query.group
+        if(req.query.name) filter.name = { $regex: req.query.name, $options: 'i' }
+
+        console.log(filter)
 
         const chats = await Chat.find(filter)
         res.status(200).json({sucess: true, count: chats.length, chats});
@@ -15,7 +19,7 @@ export const getChats = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const createChat = async (req: Request, res: Response): Promise<void> => {
-    let { name, members, isGroupChat } = req.body;
+    let { name, members, isGroupChat, groupIcon } = req.body;
     console.log('Before\t:',name,members,isGroupChat)
     
     if(!isGroupChat) {
@@ -29,12 +33,17 @@ export const createChat = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
+        if(!groupIcon) {
+            const icons = ['group1', 'group2', 'group3','group4','group5'];
+            groupIcon = icons[Math.floor(Math.random() * icons.length)];
+        }
+
         isGroupChat = true;
     }
 
     console.log('After\t:',name,members,isGroupChat)
     
-    const chat = await Chat.create({ name, members, isGroupChat });
+    const chat = await Chat.create({ name, members, isGroupChat, groupIcon });
 
     res.status(201).json({ 
         success: true,
