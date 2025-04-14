@@ -125,7 +125,7 @@ export default function ChatMessages({ userId, chatId, messages, globalUserData,
   }, [targetMessageIdx, sendReaction]);
 
   return (
-    <div className="flex flex-col h-full gap-4 p-6 overflow-y-auto flex-1 rounded-xl relative">
+    <div className="flex flex-col h-full gap-4 px-6 overflow-y-auto flex-1 rounded-xl relative">
       {/* {messages.map((msg, idx) => { */}
       {messages.filter(msg => msg.chat === chatId).map((msg, idx) => {
         const isUser = msg.sender._id === userId;

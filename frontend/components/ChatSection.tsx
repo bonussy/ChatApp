@@ -9,7 +9,7 @@ import axios from 'axios';
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaGlobeAsia } from "react-icons/fa";
 
-export default function ChatSection({ userId, chatId, globalUserData }: { userId: string, chatId: string, globalUserData?: any }) {
+export default function ChatSection({ userId, chatId, chatName, chatMemberCount, globalUserData }: { userId: string, chatId: string, chatName?: string, chatMemberCount?: number, globalUserData?: any }) {
   const { messages, sendMessage, sendReaction, setMessages } = useSocket();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ return (
     <div className="flex flex-1 flex-col h-full w-3/4 bg-white rounded-xl">
         <div className="flex items-center p-4 border-b border-gray-200 text-xl font-bold">
           { (chatId != "global") ? <BsFillPeopleFill className="inline-block mr-2" /> : <FaGlobeAsia className="inline-block mr-2" />}
-          { (chatId != "global") ? `General Chat (${chatId})` : "Global Chat"}
+          { (chatId != "global") ? `${chatName} (${chatMemberCount})` : "Global Chat"}
         </div>
         <ChatMessages 
           userId={userId}
