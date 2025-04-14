@@ -4,6 +4,8 @@ interface IChat extends Document {
     _id: Types.ObjectId;
     name: string;
     members: Types.ObjectId[];
+    isGroupChat: boolean;
+    createdAt: Date;
 }
 
 const ChatSchema: Schema<IChat> = new Schema({
@@ -17,7 +19,15 @@ const ChatSchema: Schema<IChat> = new Schema({
             ref: "users",
             required: true,
         }
-    ]
+    ],
+    isGroupChat: {
+        type: Boolean,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
 });
 
 const Chat = mongoose.model<IChat>("Chat", ChatSchema);
