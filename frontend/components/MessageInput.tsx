@@ -1,39 +1,77 @@
 "use client";
 
 import { useState } from 'react';
-import { useSocket } from '@/context/SocketContext';
+import { LuSend } from "react-icons/lu";
+import axios from 'axios';
 
 type Props = {
-  onSend: (text: string ) => void;
+  userId: string;
+  chatId: string;
+  globalUserData?: any;
+  onSend: (message: any) => void;
 };
 
-export default function MessageInput({ onSend }: Props) {
-  // const { sendMessage } = useSocket();
-  // const [input, setInput] = useState('');
+export default function MessageInput({ userId, chatId, globalUserData, onSend }: Props) {
   const [text, setText] = useState<string>('');
+
+  const postMessage = async () => {
+    try {
+      if (chatId !== "global") {
+        const response = await axios.post("http://localhost:3001/api/messages", {
+          senderId: userId,
+          chatId: chatId,
+          text,
+        }, {
+          withCredentials: true,
+        }); 
+
+        console.log("Message posted successfully:", response.data.data);
+        onSend(response.data.data); // Send the message to the parent component
+      } else {
+        onSend({
+          _id: "global" + Math.floor(Math.random() * 1000000),
+          sender: {
+            _id: globalUserData.id,
+            username: globalUserData.username,
+            profileIcon: globalUserData.profileIcon,
+          },
+          chat: "global",
+          text: text,
+          timestamp: new Date(),
+          reactions: {},
+        });
+      }
+
+    } catch (err: any) {
+      console.log("Failed to post message:", err.response?.data?.message || err.message, "\nUser ID:", userId, "\nChat ID:", chatId);
+    }
+  };
 
   const handleSend = () => {
     if (text.trim()) {
-      onSend(text);
+      // onSend(text);
+      postMessage();
       setText('');
     }
   };
 
   return (
-    <div className="flex gap-2 p-4 border-t bg-white">
+    <div className="p-6">
+    <div className="flex justify-between w-full pl-4 pr-3 py-2 border border-gray-200 rounded-xl">
       <input
-        className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none"
-        placeholder="Type a message..."
+        className="w-full focus:outline-none"
+        placeholder="Type here..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
       />
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600"
+        className="bg-black text-white rounded-xl px-2 py-2"
         onClick={handleSend}
       >
-        Send
+        <LuSend />
       </button>
+    </div>
     </div>
   );
 }
