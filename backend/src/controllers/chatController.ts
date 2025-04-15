@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Chat from '../models/chat';
+import mongoose from 'mongoose';
 
 export const getChats = async (req: Request, res: Response): Promise<void> => {
     console.log(req.query)
@@ -13,6 +14,17 @@ export const getChats = async (req: Request, res: Response): Promise<void> => {
 
         const chats = await Chat.find(filter)
         res.status(200).json({sucess: true, count: chats.length, chats});
+    } catch (error) {
+        res.status(500).json({ sucess: false, message: 'Server error' });
+    }
+}
+
+export const getChat = async (req: Request, res: Response): Promise<void> => {
+    console.log(req.query)
+    
+    try {
+        const chat = await Chat.findById(req.params.id)
+        res.status(200).json({sucess: true, chat});
     } catch (error) {
         res.status(500).json({ sucess: false, message: 'Server error' });
     }
@@ -50,4 +62,50 @@ export const createChat = async (req: Request, res: Response): Promise<void> => 
         message: 'Create chat successful. Enjoy!',
         chat
     });
+};
+
+export const addMemberToGroupChat = async (req: Request, res: Response): Promise<void> => {
+    const memberId = req.body.member as string;
+    console.log(memberId)
+
+    if (!memberId || !mongoose.Types.ObjectId.isValid(memberId)) {
+        res.status(400).json({ success: false, message: 'Invalid or missing member ID' });
+        return;
+    }
+
+    const memberObjectId = new mongoose.Types.ObjectId(memberId);
+
+    try {
+        const chat = await Chat.findById(req.params.id);
+
+        if (!chat) {
+            res.status(404).json({ success: false, message: 'Chat not found' });
+            return;
+        }
+
+        const isAlreadyMember = chat.members.some((member: mongoose.Types.ObjectId) =>
+            member.equals(memberObjectId)
+        );
+
+        if (isAlreadyMember) {
+            res.status(400).json({ success: false, message: 'Member already in chat' });
+            return;
+        }
+
+        console.log("Requested chat ID:", req.params.id);
+        const chat2 = await Chat.findById(req.params.id);
+        console.log("Found chat:", chat2);
+
+        chat.members.push(memberObjectId);
+        await chat.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Member added successfully',
+            chat
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 };
