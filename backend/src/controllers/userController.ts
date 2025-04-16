@@ -1,6 +1,19 @@
 import { Request, Response } from "express";
 import User from "../models/user"; // Adjust the path to your User model
 
+export const getUserById = async (req: Request, res:Response): Promise<void> => {
+  // console.log(req.params.userId)
+
+  try {
+    const user = await User.findById(req.params.userId)
+
+    res.status(200).json({ success: true, user});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
 // Update user details
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
