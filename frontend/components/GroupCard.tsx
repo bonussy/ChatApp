@@ -79,7 +79,7 @@ export default function GroupCard({ chat }: { chat: Chat}) {
             <img
                 src={groups.find((icon) => icon.id === chat.groupIcon)?.src}
                 alt={groups.find((icon) => icon.id === chat.groupIcon)?.alt}
-                className="w-20 h-20 rounded-full"
+                className="w-20 h-20 rounded-full border-gray-300 border"
             />
             <p className="font-semibold text-2xl">{chat.name}</p>
             <div>
