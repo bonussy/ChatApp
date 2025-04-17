@@ -7,6 +7,7 @@ import { useUser } from "@/hooks/useUser";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar";
+import OnlineUsers from "@/components/OnlineUsers";
 
 interface userDataToEmit {
   id: string;
@@ -105,7 +106,9 @@ export default function GlobalPage() {
         <NavBar />
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
-        <div className="h-full w-1/4 bg-white rounded-xl">Chat list</div>
+        <div className="h-full w-1/4 bg-white rounded-xl">
+          <OnlineUsers />
+        </div>
         <ChatSection
           userId={userDataToEmit ? userDataToEmit.id : ""}
           chatId="global"
