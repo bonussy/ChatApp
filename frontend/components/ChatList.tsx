@@ -50,8 +50,6 @@ const ChatList: React.FC<ChatListProps> = ({ updateChatDetails }) => {
     };
 
     fetchChatList();
-    console.log("Chat list fetched successfully");
-    console.log(chatList);
   }, []);
 
   if (loading) {
