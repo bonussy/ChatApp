@@ -7,6 +7,7 @@ import { useUser } from "@/hooks/useUser";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar";
+import ChatList from "@/components/ChatList";
 
 export default function GeneralPage() {
   const { socket } = useSocket();
@@ -38,6 +39,12 @@ export default function GeneralPage() {
   useEffect(() => {
     if (user?._id) setUserId(user._id);
   }, [user?._id]);
+
+  const updateChatDetails = (chat) => {
+    setChatId(chat.id);
+    setChatName(chat.name);
+    setChatMemberCount(chat.memberCount);
+  };
 
   if (loading) {
     // return <div>Loading...</div>;
@@ -74,9 +81,7 @@ export default function GeneralPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          Chat list <br />
-          (UserId: {userId}) <br />
-          (chatId: {chatId})
+          <ChatList updateChatDetails={updateChatDetails} />
         </div>
         <ChatSection
           userId={userId || ""}
