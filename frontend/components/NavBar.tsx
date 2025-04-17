@@ -18,8 +18,8 @@ const NavBar: React.FC = () => {
   return (
     <div className="flex justify-between items-center p-4 w-full h-full">
       <div className="text-2xl font-bold">3-Way Chat</div>
-      <div className="flex gap-4 items-center">
-        <div className="flex gap-4">
+      <div className="flex gap-6 items-center">
+        <div className="flex gap-6 text-lg">
           <Link href="/general">
             <div className="hover:underline">general chat</div>
           </Link>
@@ -53,7 +53,7 @@ const NavBar: React.FC = () => {
           </div>
         ) : (
           <Link href="/login">
-            <button className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-gray-200">
+            <button className="bg-gray-100 text-black px-4 py-2 rounded-md hover:bg-gray-200 text-lg">
               Login
             </button>
           </Link>
