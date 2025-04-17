@@ -114,7 +114,7 @@ const OnlineUsers: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="text-2xl font-bold p-4 border-b border-gray-200">
+      <div className="text-xl font-bold p-4 border-b border-gray-200">
         Online
       </div>
       <div className="flex flex-col h-full overflow-y-auto relative">
