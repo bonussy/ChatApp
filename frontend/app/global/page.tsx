@@ -60,7 +60,7 @@ export default function GlobalPage() {
         profileIcon: "icon" + (Math.floor(Math.random() * 5) + 1),
       });
     }
-  }, [user?.username, guestUsername]);
+  }, [user, guestUsername]);
 
   useEffect(() => {
     if (socket && socket.connected && userDataToEmit) {
@@ -127,7 +127,7 @@ export default function GlobalPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          <OnlineUsers onlineUsers={onlineUsers} />
+          <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} />
         </div>
         <ChatSection
           userId={userDataToEmit ? userDataToEmit.id : ""}

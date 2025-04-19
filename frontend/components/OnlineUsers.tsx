@@ -1,4 +1,5 @@
 import React from "react";
+import AddChat from "@/components/AddChat";
 
 interface userDataToEmit {
   id: string;
@@ -8,6 +9,7 @@ interface userDataToEmit {
 
 interface OnlineUserProp {
   onlineUsers: userDataToEmit[];
+  currentUser: userDataToEmit | null;
 }
 
 const icons = [
@@ -18,8 +20,13 @@ const icons = [
   { id: "icon5", src: "/profile/yellow_paw.svg", alt: "Icon 5" },
 ];
 
-const OnlineUsers: React.FC<OnlineUserProp> = ({ onlineUsers }) => {
+const OnlineUsers: React.FC<OnlineUserProp> = ({
+  onlineUsers,
+  currentUser,
+}) => {
   const seenUsers = new Set();
+  console.log("Online Users:", onlineUsers);
+  console.log("Current User:", currentUser);
   return (
     <div className="flex flex-col h-full w-full">
       <div className="text-xl font-bold p-4 border-b border-gray-200">
@@ -27,7 +34,7 @@ const OnlineUsers: React.FC<OnlineUserProp> = ({ onlineUsers }) => {
       </div>
       <div className="flex flex-col h-full overflow-y-auto relative">
         {onlineUsers.map((user) => {
-          if (seenUsers.has(user.id)) return null; // Skip duplicate users
+          if (seenUsers.has(user.id) || user.id == currentUser?.id) return null; // Skip duplicate users
           seenUsers.add(user.id); // Add user ID to the Set
 
           return (
@@ -46,9 +53,11 @@ const OnlineUsers: React.FC<OnlineUserProp> = ({ onlineUsers }) => {
                 </div>
                 <div className="ml-3">{user.username}</div>
               </div>
-              <div className="ml-4 text-gray-500">
-                {user.username.includes("Guest") ? "" : "+"}
-              </div>
+              {currentUser?.id?.includes("Guest") ? null : user?.id?.includes(
+                  "Guest"
+                ) ? null : (
+                <AddChat currentUser={currentUser?.id} parentUser={user.id} />
+              )}
             </div>
           );
         })}
