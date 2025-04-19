@@ -1,13 +1,11 @@
 "use client";
-
 import ChatSection from "@/components/ChatSection";
-import React from "react";
-import { useSocket } from "@/context/SocketContext";
-import { useUser } from "@/hooks/useUser";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar";
 import OnlineUsers from "@/components/OnlineUsers";
+import { useSocket } from "@/context/SocketContext";
+import { useUser } from "@/hooks/useUser";
 
 interface userDataToEmit {
   id: string;
@@ -22,6 +20,7 @@ export default function GlobalPage() {
   const [userDataToEmit, setUserDataToEmit] = useState<userDataToEmit | null>(
     null
   );
+  const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
 
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
@@ -36,7 +35,6 @@ export default function GlobalPage() {
           "Failed to fetch user:",
           err.response?.data?.message || err.message
         );
-
         // Generate a random guest username
         const randomGuestUsername = `Guest${Math.floor(
           100 + Math.random() * 900
@@ -45,35 +43,57 @@ export default function GlobalPage() {
         console.log("Generated guest username:", randomGuestUsername);
       }
     };
-
     fetchUserAndEmitUsername();
   }, [socket]);
 
   useEffect(() => {
-    if (user?.username)
+    if (user?.username) {
       setUserDataToEmit({
         id: user._id,
         username: user.username,
         profileIcon: user.profileIcon,
       });
-    // username);
-    else if (guestUsername)
+    } else if (guestUsername) {
       setUserDataToEmit({
         id: guestUsername,
         username: guestUsername,
         profileIcon: "icon" + (Math.floor(Math.random() * 5) + 1),
       });
+    }
   }, [user?.username, guestUsername]);
 
   useEffect(() => {
     if (socket && socket.connected && userDataToEmit) {
       console.log("Emitting user data:", userDataToEmit);
-      // socket.emit("set-username", userDataToEmit);
+      socket.emit("set-username", userDataToEmit);
     }
   }, [socket?.connected, userDataToEmit]);
 
+  useEffect(() => {
+    const fetchOnlineUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/online-users"
+        );
+        setOnlineUsers(response.data.onlineUsers);
+      } catch (error) {
+        console.error("Error fetching online users:", error);
+      }
+    };
+    fetchOnlineUsers();
+
+    if (socket) {
+      socket.on("updateOnlineUsers", (users) => {
+        setOnlineUsers(users);
+      });
+
+      return () => {
+        socket.off("updateOnlineUsers");
+      };
+    }
+  }, [socket]);
+
   if (loading) {
-    // return <div>Loading...</div>;
     return (
       <div
         role="status"
@@ -107,7 +127,7 @@ export default function GlobalPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          <OnlineUsers />
+          <OnlineUsers onlineUsers={onlineUsers} />
         </div>
         <ChatSection
           userId={userDataToEmit ? userDataToEmit.id : ""}

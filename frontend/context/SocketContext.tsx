@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import io, { Socket } from 'socket.io-client';
+import { createContext, useContext, useEffect, useState } from "react";
+import io, { Socket } from "socket.io-client";
 
 export type Message = {
   _id: string;
@@ -18,9 +18,14 @@ export type Message = {
   };
 };
 
+type userDataToEmit = {
+  id: string;
+  username: string;
+  profileIcon: string;
+};
+
 type SocketContextType = {
   socket: Socket | null;
-  // sendMessage: (message: { text: string; chatId: string; senderId: string }) => void;
   sendMessage: (message: Message) => void;
   sendReaction: (payload: {
     messageId: string;
@@ -29,6 +34,8 @@ type SocketContextType = {
   }) => void;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  onlineUsers: userDataToEmit[];
+  setOnlineUsers: React.Dispatch<React.SetStateAction<userDataToEmit[]>>;
 };
 
 const SocketContext = createContext<SocketContextType>({
@@ -37,6 +44,8 @@ const SocketContext = createContext<SocketContextType>({
   sendReaction: () => {},
   messages: [],
   setMessages: () => {},
+  onlineUsers: [],
+  setOnlineUsers: () => {},
 });
 
 export const useSocket = () => useContext(SocketContext);
@@ -44,16 +53,17 @@ export const useSocket = () => useContext(SocketContext);
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001', { withCredentials: true });
+    const newSocket = io("http://localhost:3001", { withCredentials: true });
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      console.log('Socket connected:', newSocket.id);
+    newSocket.on("connect", () => {
+      console.log("Socket connected:", newSocket.id);
     });
 
-    newSocket.on('message', (message: Message) => {
+    newSocket.on("message", (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
 
@@ -79,18 +89,18 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       });
     });
 
+    newSocket.on("updateOnlineUsers", (users: userDataToEmit[]) => {
+      setOnlineUsers(users);
+    });
+
     return () => {
-      console.log('Disconnecting socket...');
+      console.log("Disconnecting socket...");
       newSocket.disconnect();
     };
   }, []);
 
-  // const sendMessage = (message: { text: string; chatId: string; senderId: string }) => {
-  //   socket?.emit('message', message);
-  // };
-
-  const sendMessage = (message : Message) => {
-    socket?.emit('message', message);
+  const sendMessage = (message: Message) => {
+    socket?.emit("message", message);
   };
 
   const sendReaction = (payload: {
@@ -102,7 +112,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <SocketContext.Provider value={{ socket, sendMessage, sendReaction, messages, setMessages }}>
+    <SocketContext.Provider
+      value={{
+        socket,
+        sendMessage,
+        sendReaction,
+        messages,
+        setMessages,
+        onlineUsers,
+        setOnlineUsers,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

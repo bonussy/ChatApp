@@ -5,8 +5,11 @@ import { time } from "console";
 import { v4 as uuidv4 } from "uuid";
 import Message from "../models/messages";
 
-const initializeSocket = (server: HttpServer): void => {
-  //Create Socket.io server instance
+const initializeSocket = (
+  server: HttpServer,
+  onlineUsers: { [key: string]: string }
+): void => {
+  // Create Socket.io server instance
   const io = new Server(server, {
     cors: {
       origin: "http://localhost:3000",
@@ -15,7 +18,7 @@ const initializeSocket = (server: HttpServer): void => {
     },
   });
 
-  //Handle socket connection event
+  // Handle socket connection event
   io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
 
@@ -28,18 +31,14 @@ const initializeSocket = (server: HttpServer): void => {
         usernameFromClient
       );
       username = usernameFromClient;
+      onlineUsers[socket.id] = username;
       console.log(`Username updated for socket ${socket.id}:`, username);
+      io.emit("updateOnlineUsers", Object.values(onlineUsers));
     });
 
     // Handle "message" event
     socket.on("message", (data) => {
       const sender = username ?? `Guest`;
-      // const messagePayload = {
-      //     id: uuidv4(),
-      //     user: sender, // Use the updated username
-      //     text: data.text,
-      //     timestamp: new Date()
-      // };
       const messagePayload = data;
       console.log("Message received:", messagePayload);
       io.emit("message", messagePayload); // Broadcast message to all connected clients
@@ -54,6 +53,8 @@ const initializeSocket = (server: HttpServer): void => {
     // Handle disconnection event
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
+      delete onlineUsers[socket.id];
+      io.emit("updateOnlineUsers", Object.values(onlineUsers));
     });
   });
 };
