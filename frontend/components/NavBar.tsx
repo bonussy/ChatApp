@@ -4,11 +4,23 @@ import { useState } from "react";
 import React from "react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
-import { useUser } from "@/hooks/useUser";
 import React from "react";
+import { User } from "@hooks/useUser";
 
-const NavBar: React.FC = () => {
-  const { user, loading, setUser } = useUser(false);
+interface NavBarProps {
+  user: User | null;
+}
+
+const icons = [
+  { id: "icon1", src: "/profile/blue_paw.svg", alt: "Icon 1" },
+  { id: "icon2", src: "/profile/green_paw.svg", alt: "Icon 2" },
+  { id: "icon3", src: "/profile/purple_paw.svg", alt: "Icon 3" },
+  { id: "icon4", src: "/profile/red_paw.svg", alt: "Icon 4" },
+  { id: "icon5", src: "/profile/yellow_paw.svg", alt: "Icon 5" },
+];
+
+const NavBar: React.FC<NavBarProps> = (user) => {
+  console.log("User in NavBar:", user);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -30,14 +42,13 @@ const NavBar: React.FC = () => {
             <div className="hover:underline">search</div>
           </Link>
         </div>
-        {user ? (
+        {user.user ? (
           <div className="relative">
-            <div
-              className="w-10 h-10 rounded-full bg-gray-500"
+            <img
+              src={icons.find((icon) => icon.id === user.user.profileIcon)?.src}
+              className="w-10 h-10 rounded-full"
               onClick={toggleDropdown}
-            >
-              <img src={user.profileIcon} />
-            </div>
+            />
 
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 rounded-md">

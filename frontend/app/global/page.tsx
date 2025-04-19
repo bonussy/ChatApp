@@ -103,7 +103,7 @@ export default function GlobalPage() {
   return (
     <div className="flex flex-col h-screen bg-gray-100 p-4 gap-4">
       <div className="flex h-16 w-full bg-white rounded-xl items-center">
-        <NavBar />
+        <NavBar user={user} />
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
