@@ -34,7 +34,11 @@ export const createChat = async (req: Request, res: Response): Promise<void> => 
     let { name, members, isGroupChat, groupIcon } = req.body;
     console.log('Before\t:',name,members,isGroupChat)
     
-    if(!isGroupChat) {
+    if(members.length<=2) {
+        if(members.length<2) {
+            res.status(400).json({success:false, message: 'Minimum numbers to create new chat is 2'});
+            return;
+        }
         const chat_name = members.sort().join('-');
         name = chat_name
         isGroupChat = false;
