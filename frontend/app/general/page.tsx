@@ -1,13 +1,12 @@
 "use client";
 
 import ChatSection from "@/components/ChatSection";
-import React from "react";
-import { useSocket } from "@/context/SocketContext";
-import { useUser } from "@/hooks/useUser";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "@/components/NavBar";
 import ChatList from "@/components/ChatList";
+import { useSocket } from "@/context/SocketContext";
+import { useUser } from "@/hooks/useUser";
 
 export default function GeneralPage() {
   const { socket } = useSocket();
@@ -16,6 +15,7 @@ export default function GeneralPage() {
   const [chatId, setChatId] = useState<string>("67fb83e9a40040fd8ff1d680");
   const [chatName, setChatName] = useState<string>("Veeliw the Fifth");
   const [chatMemberCount, setChatMemberCount] = useState<number>(3);
+  const [chatList, setChatList] = useState<Chat[]>([]);
 
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
@@ -24,6 +24,7 @@ export default function GeneralPage() {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
+        setUserId(response.data.user._id); // Set user ID
         console.log("User fetched successfully:", response.data.user);
       } catch (err: any) {
         console.log(
@@ -34,20 +35,34 @@ export default function GeneralPage() {
     };
 
     fetchUserAndEmitUsername();
-  }, [socket]);
+  }, [socket, setUser]);
 
   useEffect(() => {
-    if (user?._id) setUserId(user._id);
-  }, [user?._id]);
+    if (userId) {
+      const fetchChatList = async () => {
+        try {
+          console.log("Fetching chat list for user ID:", userId); // Log userId
+          const response = await axios.get(
+            `http://localhost:3001/api/chat/user/${userId}`
+          );
+          console.log("Fetching response", response); // Log response
+          setChatList(response.data.chats); // Set chat list state
+        } catch (error) {
+          console.error("Error fetching chat list:", error); // Log error
+        }
+      };
+
+      fetchChatList();
+    }
+  }, [userId]);
 
   const updateChatDetails = (chat) => {
-    setChatId(chat.id);
+    setChatId(chat._id);
     setChatName(chat.name);
     setChatMemberCount(chat.memberCount);
   };
 
   if (loading) {
-    // return <div>Loading...</div>;
     return (
       <div
         role="status"
@@ -81,7 +96,7 @@ export default function GeneralPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          <ChatList updateChatDetails={updateChatDetails} />
+          <ChatList updateChatDetails={updateChatDetails} chatList={chatList} />
         </div>
         <ChatSection
           userId={userId || ""}
