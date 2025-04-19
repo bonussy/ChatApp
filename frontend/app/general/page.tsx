@@ -5,9 +5,11 @@ import React from "react";
 import { useSocket } from '@/context/SocketContext';
 import { useUser } from '@/hooks/useUser';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from "next/navigation";
 import axios from 'axios';
 
 export default function GeneralPage() {
+  const router = useRouter();
   const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [userId, setUserId] = useState<string>("");
@@ -27,6 +29,7 @@ export default function GeneralPage() {
 
       } catch (err: any) {
         console.log("Failed to fetch user:", err.response?.data?.message || err.message);
+        router.push("/login");
       }
     };
 
@@ -36,6 +39,14 @@ export default function GeneralPage() {
   useEffect(() => {
     if (user?._id) setUserId(user._id);
   }, [user?._id]);
+
+  // // Redirect if not logged in
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     console.log("User not found:", user, "  Loading:", loading);
+  //     router.push("/login");
+  //   }
+  // }, [loading, user]);
 
   if (loading) {
     // return <div>Loading...</div>;

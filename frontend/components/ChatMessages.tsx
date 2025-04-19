@@ -125,7 +125,7 @@ export default function ChatMessages({ userId, chatId, messages, globalUserData,
   }, [targetMessageIdx, sendReaction]);
 
   return (
-    <div className="flex flex-col h-full gap-4 px-6 overflow-y-auto flex-1 rounded-xl relative">
+    <div className="flex flex-col h-full gap-4 px-6 pt-4 overflow-y-auto flex-1 rounded-xl relative">
       {/* {messages.map((msg, idx) => { */}
       {messages.filter(msg => msg.chat === chatId).map((msg, idx) => {
         const isUser = msg.sender._id === userId;
@@ -167,13 +167,13 @@ export default function ChatMessages({ userId, chatId, messages, globalUserData,
               >
                 {msg.text}
                 {msg.reactions && (
-                  <div className="flex gap-2 mt-2 text-sm">
+                  <div className="flex gap-2 text-sm">
                     {Object.entries(msg.reactions)
                       .filter(([_, users]) => users.length > 0)
                       .map(([emoji, users]) => (
                         <span
                           key={emoji}
-                          className="px-2 py-1 bg-white rounded-full border text-black"
+                          className="px-2 py-1 mt-2 bg-white rounded-full border text-black"
                         >
                           {emoji} {users.length}
                         </span>
