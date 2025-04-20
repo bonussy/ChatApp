@@ -8,7 +8,7 @@ const AddChat = ({
   currentUser,
   parentUser,
 }: {
-  currentUser: string;
+  currentUser: string|undefined;
   parentUser: string;
 }) => {
   const router = useRouter();

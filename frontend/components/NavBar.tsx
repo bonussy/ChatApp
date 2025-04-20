@@ -4,8 +4,13 @@ import { useState } from "react";
 import React from "react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
-import React from "react";
-import { User } from "@hooks/useUser";
+
+export interface User {
+    _id: string;
+    username: string;
+    email:string;
+    profileIcon: string;
+}
 
 interface NavBarProps {
   user: User | null;
@@ -45,7 +50,7 @@ const NavBar: React.FC<NavBarProps> = (user) => {
         {user.user ? (
           <div className="relative">
             <img
-              src={icons.find((icon) => icon.id === user.user.profileIcon)?.src}
+              src={icons.find((icon) => icon.id === user.user?.profileIcon)?.src}
               className="w-10 h-10 rounded-full"
               onClick={toggleDropdown}
             />

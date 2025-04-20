@@ -9,6 +9,14 @@ import { useSocket } from "@/context/SocketContext";
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 
+interface Chat {
+  _id: string;
+  name: string;
+  isGroupChat: boolean;
+  groupIcon: string;
+  memberCount: number;
+}
+
 export default function GeneralPage() {
   const router = useRouter();
   const { socket } = useSocket();
@@ -29,7 +37,7 @@ export default function GeneralPage() {
         setUserId(response.data.user._id); // Set user ID
         console.log("User fetched successfully:", response.data.user);
       } catch (err: any) {
-console.log("Failed to fetch user:", err.response?.data?.message || err.message);
+        console.log("Failed to fetch user:", err.response?.data?.message || err.message);
         router.push("/login");
       }
     };
@@ -56,7 +64,7 @@ console.log("Failed to fetch user:", err.response?.data?.message || err.message)
     }
   }, [userId]);
 
-  const updateChatDetails = (chat) => {
+  const updateChatDetails = (chat:Chat) => {
     setChatId(chat._id);
     setChatName(chat.name);
     setChatMemberCount(chat.memberCount);
