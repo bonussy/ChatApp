@@ -49,6 +49,17 @@ export const createChat = async (
       return;
     }
     const chat_name = members.sort().join("-");
+
+    const existingChat = await Chat.findOne({ name: chat_name, isGroupChat: false });
+
+    if (existingChat) {
+        res.status(400).json({
+        success: false,
+        message: "Chat with these members already exists",
+        });
+        return;
+    }
+
     name = chat_name;
     isGroupChat = false;
   } else {
