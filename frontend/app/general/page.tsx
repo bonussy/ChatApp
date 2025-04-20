@@ -7,8 +7,10 @@ import NavBar from "@/components/NavBar";
 import ChatList from "@/components/ChatList";
 import { useSocket } from "@/context/SocketContext";
 import { useUser } from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 export default function GeneralPage() {
+  const router = useRouter();
   const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [userId, setUserId] = useState<string>("");
@@ -27,10 +29,8 @@ export default function GeneralPage() {
         setUserId(response.data.user._id); // Set user ID
         console.log("User fetched successfully:", response.data.user);
       } catch (err: any) {
-        console.log(
-          "Failed to fetch user:",
-          err.response?.data?.message || err.message
-        );
+console.log("Failed to fetch user:", err.response?.data?.message || err.message);
+        router.push("/login");
       }
     };
 
@@ -61,6 +61,14 @@ export default function GeneralPage() {
     setChatName(chat.name);
     setChatMemberCount(chat.memberCount);
   };
+
+  // // Redirect if not logged in
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     console.log("User not found:", user, "  Loading:", loading);
+  //     router.push("/login");
+  //   }
+  // }, [loading, user]);
 
   if (loading) {
     return (

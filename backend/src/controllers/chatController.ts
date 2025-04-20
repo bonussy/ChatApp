@@ -31,42 +31,42 @@ export const getChat = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const createChat = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  let { name, members, isGroupChat, groupIcon } = req.body;
-  console.log("Before\t:", name, members, isGroupChat);
+export const createChat = async (req: Request, res: Response): Promise<void> => {
+    let { name, members, isGroupChat, groupIcon } = req.body;
+    console.log('Before\t:',name,members,isGroupChat)
+    
+    if(members.length<=2) {
+        if(members.length<2) {
+            res.status(400).json({success:false, message: 'Minimum numbers to create new chat is 2'});
+            return;
+        }
+        const chat_name = members.sort().join('-');
+        name = chat_name
+        isGroupChat = false;
+    }
+    else {
+        if(!name) {
+            res.status(400).json({success:false, message: 'Please insert name for group chat'});
+            return;
+        }
 
-  if (!isGroupChat) {
-    const chat_name = members.sort().join("-");
-    name = chat_name;
-    isGroupChat = false;
-  } else {
-    if (!name) {
-      res
-        .status(400)
-        .json({ success: false, message: "Please insert name for group chat" });
-      return;
+        if(!groupIcon) {
+            const icons = ['group1', 'group2', 'group3','group4','group5'];
+            groupIcon = icons[Math.floor(Math.random() * icons.length)];
+        }
+
+        isGroupChat = true;
     }
 
-    if (!groupIcon) {
-      const icons = ["group1", "group2", "group3", "group4", "group5"];
-      groupIcon = icons[Math.floor(Math.random() * icons.length)];
-    }
+    console.log('After\t:',name,members,isGroupChat)
+    
+    const chat = await Chat.create({ name, members, isGroupChat, groupIcon });
 
-    isGroupChat = true;
-  }
-
-  console.log("After\t:", name, members, isGroupChat);
-
-  const chat = await Chat.create({ name, members, isGroupChat, groupIcon });
-
-  res.status(201).json({
-    success: true,
-    message: "Create chat successful. Enjoy!",
-    chat,
-  });
+    res.status(201).json({ 
+        success: true,
+        message: 'Create chat successful. Enjoy!',
+        chat
+    });
 };
 
 export const addMemberToGroupChat = async (
