@@ -1,47 +1,41 @@
 "use client";
 
 import React from "react";
-import { Button, Card } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function WelcomePage() {
   const router = useRouter();
+
+  const handleGoToGlobalChat = () => {
+    router.push("/global"); // Navigate to the global chat page
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6">Welcome to ChatApp</h1>
-      <Card 
-        className="shadow-md p-6 text-center"
-        sx={{
-          backgroundColor: "lightyellow", // Override background color
-          borderRadius: "16px", // Add rounded corners
-        }}
-      >
-        <h2 className="text-lg font-bold mb-4">Navigate to:</h2>
-        <div className="flex flex-col gap-4">
-          <Button
-            variant="contained"
-            color="success"
-            onClick={() => router.push("/chat")}
-          >
-            Chat
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => router.push("/register")}
-          >
-            Register
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => router.push("/login")}
-          >
-            Login
-          </Button>
+      <div className="flex flex-col items-center gap-6 w-full max-w-lg shadow-lg rounded-lg p-8 bg-white">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <img
+            src="/logo.png" // Replace with the path to your logo
+            alt="Chat App Logo"
+            className="w-20 h-20"
+          />
         </div>
-      </Card>
+
+        {/* Welcome Message */}
+        <h1 className="text-3xl font-bold text-center">Welcome to ChatApp</h1>
+        <p className="text-center text-md text-gray-500">
+          Join the global chat and connect with others!
+        </p>
+
+        {/* Button to Global Chat */}
+        <button
+          onClick={handleGoToGlobalChat}
+          className="w-full p-3 bg-black text-white font-medium text-lg rounded-lg hover:bg-gray-800 cursor-pointer transition"
+        >
+          Go to Global Chat
+        </button>
+      </div>
     </div>
   );
 }
