@@ -1,14 +1,14 @@
 // app/chat/page.tsx
-'use client';
+"use client";
 
-import ChatBox from '@/components/ChatBox';
-import MessageInput from '@/components/MessageInput';
-import LogoutButton from '@/components/LogoutButton';
-import { useSocket } from '@/context/SocketContext';
-import { useUser } from '@/hooks/useUser';
+import ChatBox from "@/components/ChatBox";
+import MessageInput from "@/components/MessageInput";
+import LogoutButton from "@/components/LogoutButton";
+import { useSocket } from "@/context/SocketContext";
+import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export default function ChatPage() {
   const { messages, sendMessage, socket } = useSocket();
@@ -19,7 +19,6 @@ export default function ChatPage() {
   // console.log('user in chat: ', user); // Debug line
 
   useEffect(() => {
-
     // if(!socket || hasFetchedRef.current) return;
 
     // hasFetchedRef.current = true;
@@ -41,10 +40,15 @@ export default function ChatPage() {
         //   socket.emit("set-username", response.data.user.username);
         // }
       } catch (err: any) {
-        console.log("Failed to fetch user:", err.response?.data?.message || err.message);
-        
+        console.log(
+          "Failed to fetch user:",
+          err.response?.data?.message || err.message
+        );
+
         // Generate a random guest username
-        const randomGuestUsername = `Guest${Math.floor(100 + Math.random() * 900)}`;
+        const randomGuestUsername = `Guest${Math.floor(
+          100 + Math.random() * 900
+        )}`;
         setGuestUsername(randomGuestUsername);
       }
     };
@@ -58,7 +62,6 @@ export default function ChatPage() {
       socket.emit("set-username", user.username);
     }
   }, [socket, socket?.connected, user?.username]);
-  
 
   useEffect(() => {
     if (guestUsername && socket) {
@@ -66,7 +69,6 @@ export default function ChatPage() {
       socket.emit("set-username", guestUsername);
     }
   }, [guestUsername, socket]);
-  
 
   if (loading) {
     return <div>Loading...</div>;
@@ -77,7 +79,9 @@ export default function ChatPage() {
       <div className="w-full max-w-md h-[600px] bg-white shadow-lg rounded-lg flex flex-col overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-bold">Chat</h2>
-          <LogoutButton />
+          <div className="flex items-center w-1/4">
+            <LogoutButton />
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
           <ChatBox messages={messages} />
