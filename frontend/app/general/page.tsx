@@ -8,6 +8,7 @@ import ChatList from "@/components/ChatList";
 import { useSocket } from "@/context/SocketContext";
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/utils/config";
 
 interface Chat {
   _id: string;
@@ -31,7 +32,7 @@ export default function GeneralPage() {
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/auth/me", {
+        const response = await axios.get(`${API_URL}/api/auth/me`, {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
@@ -52,7 +53,7 @@ export default function GeneralPage() {
         try {
           console.log("Fetching chat list for user ID:", userId); // Log userId
           const response = await axios.get(
-            `http://localhost:3001/api/chat/user/${userId}`
+            `${API_URL}/api/chat/user/${userId}`
           );
           console.log("Fetching response", response); // Log response
           setChatList(response.data.chats); // Set chat list state

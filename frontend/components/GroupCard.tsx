@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { API_URL } from "@/utils/config";
 
 type Chat = {
   _id: string;
@@ -27,14 +28,14 @@ export default function GroupCard({ chat }: { chat: Chat}) {
     const addMember = () => {
         const fetchUserAndUpdateMember = async () => {
             try {
-                const response = await axios.get("http://localhost:3001/api/auth/me", {
+                const response = await axios.get(`${API_URL}/api/auth/me`, {
                     withCredentials: true,
                 });
 
                 const userId = response.data.user._id;
                 console.log("User fetched successfully:", response.data.user);
                 console.log(chat._id)
-                const response2 = await axios.put(`http://localhost:3001/api/chat/${chat._id}`, {
+                const response2 = await axios.put(`${API_URL}/api/chat/${chat._id}`, {
                     member:userId
                 });
                 console.log("update member successfully:", response2.data);
@@ -58,7 +59,7 @@ export default function GroupCard({ chat }: { chat: Chat}) {
 
             await Promise.all(chat.members.map(async (id: string) => {
                 try {
-                    const response = await axios.get(`http://localhost:3001/api/user/${id}`);
+                    const response = await axios.get(`${API_URL}/api/user/${id}`);
                     map.set(id, response.data.user.username);
                 } catch (err: any) {
                     console.log("Failed to fetch user",err.response?.data?.message || err.message);

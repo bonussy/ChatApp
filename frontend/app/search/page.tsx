@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import GroupCard from "@/components/GroupCard";
+import { API_URL } from "@/utils/config";
 
 type Chat = {
     _id: string;
@@ -50,7 +51,7 @@ export default function SearchPage() {
   useEffect( ()=>{
     const fetchAllGroupChats = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/chat?group=true${searchText===''?'':`&name=${searchText}` }`);
+        const response = await axios.get(`${API_URL}/api/chat?group=true${searchText===''?'':`&name=${searchText}` }`);
         console.log(response.data)
         setAllGroupChats(response.data.chats)
       } catch(err: any) {
@@ -64,7 +65,7 @@ export default function SearchPage() {
   useEffect(()=>{
     const fetchAllUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/auth/users',{
+        const response = await axios.get(`${API_URL}/api/auth/users`,{
           withCredentials:true
         });
         console.log(response.data.users)
@@ -80,7 +81,7 @@ export default function SearchPage() {
   const createNewGroup = ()=>{
     const createNewGroup2 = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/chat',{
+        const response = await axios.post(`${API_URL}/api/chat`,{
           name:groupName,
           members,
           isGroupChat:true

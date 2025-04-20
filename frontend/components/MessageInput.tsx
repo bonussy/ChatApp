@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { LuSend } from "react-icons/lu";
 import axios from 'axios';
+import { API_URL } from '@/utils/config';
 
 type Props = {
   userId: string;
@@ -17,7 +18,7 @@ export default function MessageInput({ userId, chatId, globalUserData, onSend }:
   const postMessage = async () => {
     try {
       if (chatId !== "global") {
-        const response = await axios.post("http://localhost:3001/api/messages", {
+        const response = await axios.post(`${API_URL}/api/messages`, {
           senderId: userId,
           chatId: chatId,
           text,

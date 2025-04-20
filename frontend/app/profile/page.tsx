@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { API_URL } from "@/utils/config";
 
 export default function ProfilePage() {
   const [username, setUsername] = useState<string>("");
@@ -20,7 +21,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/auth/me", {
+        const response = await axios.get(`${API_URL}/api/auth/me`, {
           withCredentials: true, // Include credentials (cookies) in the request
         });
 
@@ -48,7 +49,7 @@ export default function ProfilePage() {
 
     try{
       const response = await axios.put(
-        "http://localhost:3001/api/user/update",
+        `${API_URL}/api/user/update`,
         {
           username: username,
           profileIcon: selectedIcon

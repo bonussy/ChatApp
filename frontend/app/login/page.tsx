@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from "next/navigation"; // Next.js router
 import { useSocket } from "@/context/SocketContext";
 import { useUser } from "@/hooks/useUser";
+import { API_URL } from "@/utils/config";
 
 export default function LoginPage(){
   const [email, setEmail] = useState<string>("");
@@ -18,7 +19,7 @@ export default function LoginPage(){
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/auth/login",
+        `${API_URL}/api/auth/login`,
         {
           email,
           password,

@@ -3,6 +3,7 @@
 import React from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/utils/config";
 
 const AddChat = ({
   currentUser,
@@ -15,7 +16,7 @@ const AddChat = ({
 
   const handleAddChat = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/chat", {
+      const response = await axios.post(`${API_URL}/api/chat`, {
         members: [currentUser, parentUser],
       });
 

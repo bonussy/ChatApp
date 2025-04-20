@@ -4,6 +4,7 @@ import React from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
+import { API_URL } from "@/utils/config";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:3001/api/auth/logout", {
+      await axios.get(`${API_URL}/api/auth/logout`, {
         withCredentials: true, // Include credentials in the request
       });
 

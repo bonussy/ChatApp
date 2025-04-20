@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import EmojiPicker from "emoji-picker-react"; // Import EmojiPicker
+import { API_URL } from "@/utils/config";
 
 type Message = {
   _id: string;
@@ -80,7 +81,7 @@ export default function ChatMessages({
     if (!globalUserData) {
       try {
         const response = await axios.post(
-          "http://localhost:3001/api/messages/toggleReaction",
+          `${API_URL}/api/messages/toggleReaction`,
           {
             messageId: targetMessageIdx,
             emoji,

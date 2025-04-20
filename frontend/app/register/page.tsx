@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation"; // Next.js router
+import { API_URL } from "@/utils/config";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState<string>("");
@@ -14,7 +15,7 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/auth/register",
+        `${API_URL}/api/auth/register`,
         {
           username,
           email,

@@ -1,12 +1,13 @@
 // services/socketService.ts
 import { io, Socket } from 'socket.io-client';
+import { API_URL } from '@/utils/config';
 
 let socket: Socket | null = null;  // ชนิดข้อมูลเป็น null หรือ Socket
 
 // ฟังก์ชันเชื่อมต่อ
 const connectSocket = (): Socket => {
   if (!socket) {
-    socket = io('http://localhost:3001', {
+    socket = io(`${API_URL}`, {
       withCredentials: true,  // ใช้คุกกี้
     });
 

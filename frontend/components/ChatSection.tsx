@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaGlobeAsia } from "react-icons/fa";
+import { API_URL } from "@/utils/config";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 
 export default function ChatSection({ userId, chatId, chatName, chatMemberCount, globalUserData, isGroupChat }: { userId: string, chatId: string, chatName?: string, chatMemberCount?: number, globalUserData?: any, isGroupChat?: boolean }) {
@@ -17,7 +18,7 @@ export default function ChatSection({ userId, chatId, chatName, chatMemberCount,
 
     const fetchMessagesByChatId = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/messages/chatId", {
+        const response = await axios.post(`${API_URL}/api/messages/chatId`, {
           chatId 
         }, {
           withCredentials: true,

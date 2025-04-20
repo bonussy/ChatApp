@@ -6,6 +6,7 @@ import NavBar from "@/components/NavBar";
 import OnlineUsers from "@/components/OnlineUsers";
 import { useSocket } from "@/context/SocketContext";
 import { useUser } from "@/hooks/useUser";
+import { API_URL } from "@/utils/config";
 
 interface userDataToEmit {
   id: string;
@@ -25,7 +26,7 @@ export default function GlobalPage() {
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/auth/me", {
+        const response = await axios.get(`${API_URL}/api/auth/me`, {
           withCredentials: true,
         });
         setUser(response.data.user); // Update user state
@@ -73,7 +74,7 @@ export default function GlobalPage() {
     const fetchOnlineUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/online-users"
+          `${API_URL}/api/online-users`
         );
         setOnlineUsers(response.data.onlineUsers);
       } catch (error) {

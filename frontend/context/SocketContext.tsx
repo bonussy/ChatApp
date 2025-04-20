@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
+import { API_URL } from "@/utils/config";
 
 export type Message = {
   _id: string;
@@ -56,7 +57,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3001", { withCredentials: true });
+    const newSocket = io(`${API_URL}`, { withCredentials: true });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

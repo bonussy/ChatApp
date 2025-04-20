@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { API_URL } from "@/utils/config";
 
 export interface User {
     _id: string;
@@ -15,7 +16,7 @@ export const useUser = ( autoFetch = true) => {
 
     const fetchUser = async () => {
         try{
-            const response = await axios.get('http://localhost:3001/api/auth/me', {
+            const response = await axios.get(`${API_URL}/api/auth/me`, {
                 withCredentials: true // Include cookies in the request
             });
             setUser(response.data.user);
@@ -45,7 +46,7 @@ export const useUser = ( autoFetch = true) => {
 
     const logout = async () => {
         try {
-            await axios.get('http://localhost:3001/api/auth/logout', {
+            await axios.get(`${API_URL}/api/auth/logout`, {
                 withCredentials: true,
             });
             setUser(null); // Clear user state
