@@ -33,9 +33,35 @@ export default function RegisterPage() {
     }
   };
 
+  const handleBackToGlobal = () => {
+    router.push("/global"); // Navigate back to the global page
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="flex flex-col gap-5 w-full max-w-lg shadow-lg rounded-lg py-6 px-8 bg-white">
+         {/* Back Arrow */}
+         <button
+          onClick={handleBackToGlobal}
+          className="flex items-center gap-1 text-gray-400 hover:underline mb-4 cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+          Back to Global
+        </button>
+        
         {/* Logo */}
         <div className="flex justify-center mt-4">
           <img
