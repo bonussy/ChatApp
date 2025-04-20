@@ -39,7 +39,7 @@ const ChatList: React.FC<ChatListProps> = ({ updateChatDetails, chatList }) => {
         {chatList.map((chat) => (
           <div
             key={chat._id}
-            className="flex items-center justify-between h-10 p-4 border-b border-gray-200 text-xl"
+            className="flex items-center justify-between h-10 p-4 border-b border-gray-200 text-xl cursor-pointer hover:bg-gray-100"
             onClick={() => updateChatDetails(chat)}
           >
             <div className="flex items-center">

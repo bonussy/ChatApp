@@ -29,7 +29,7 @@ export default function LoginPage(){
       );
 
       console.log("Login successful:", response.data);
-      router.push("/chat"); // Redirect to chat page
+      router.push("/general"); // Redirect to general chat page
     } catch (err: any) {
       console.error("Login failed:", err.response?.data?.message || err.message);
       setError(err.response?.data?.message || "Login failed");

@@ -34,7 +34,7 @@ const OnlineUsers: React.FC<OnlineUserProp> = ({
       </div>
       <div className="flex flex-col h-full overflow-y-auto relative">
         {onlineUsers.map((user) => {
-          if (seenUsers.has(user.id) || user.id == currentUser?.id) return null; // Skip duplicate users
+          if (seenUsers.has(user.id)) return null; // Skip duplicate users
           seenUsers.add(user.id); // Add user ID to the Set
 
           return (
@@ -51,9 +51,9 @@ const OnlineUsers: React.FC<OnlineUserProp> = ({
                     className="w-8 h-8 rounded-full"
                   />
                 </div>
-                <div className="ml-3">{user.username}</div>
+                <div className="ml-3">{user.username} {user.id == currentUser?.id ? " (You)" : ""}</div>
               </div>
-              {currentUser?.id?.includes("Guest") ? null : user?.id?.includes(
+              {currentUser?.id?.includes("Guest") || (user.id == currentUser?.id) ? null : user?.id?.includes(
                   "Guest"
                 ) ? null : (
                 <AddChat currentUser={currentUser?.id} parentUser={user.id} />

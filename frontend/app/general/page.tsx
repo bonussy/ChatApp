@@ -22,9 +22,10 @@ export default function GeneralPage() {
   const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
   const [userId, setUserId] = useState<string>("");
-  const [chatId, setChatId] = useState<string>("67fb83e9a40040fd8ff1d680");
-  const [chatName, setChatName] = useState<string>("Veeliw the Fifth");
-  const [chatMemberCount, setChatMemberCount] = useState<number>(3);
+  const [chatId, setChatId] = useState<string>("");
+  const [chatName, setChatName] = useState<string>("");
+  const [chatMemberCount, setChatMemberCount] = useState<number>(0);
+  const [isGroupChat, setIsGroupChat] = useState<boolean>(false);
   const [chatList, setChatList] = useState<Chat[]>([]);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function GeneralPage() {
     setChatId(chat._id);
     setChatName(chat.name);
     setChatMemberCount(chat.memberCount);
+    setIsGroupChat(chat.isGroupChat);
   };
 
   // // Redirect if not logged in
@@ -119,6 +121,7 @@ export default function GeneralPage() {
           chatId={chatId}
           chatName={chatName}
           chatMemberCount={chatMemberCount}
+          isGroupChat={isGroupChat}
         />
       </div>
     </div>
