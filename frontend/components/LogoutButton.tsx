@@ -23,7 +23,7 @@ export default function LogoutButton() {
       //   localStorage.removeItem('token');
       //   localStorage.removeItem('userId'); // Remove userId from localStorage
 
-      router.push("/login"); // Redirect to login page after logout
+      router.push("/"); // Redirect to home page after logout
     } catch (err: any) {
       console.error(
         "Logout failed:",

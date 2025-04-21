@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { API_URL } from "@/utils/config";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 export default function ProfilePage() {
   const [username, setUsername] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<string>("icon1");
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter(); // Initialize router
 
   const icons = [
     { id: "icon1", src: "/profile/blue_paw.svg", alt: "Icon 1" },
@@ -73,11 +75,32 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="flex flex-col gap-4 w-full max-w-lg shadow-lg rounded-lg p-6 bg-white">
+        {/* Back Arrow */}
+        <button
+          onClick={() => router.back()} // Navigate to the previous page
+          className="flex items-center gap-1 text-gray-500 hover:underline mb-4 cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+          Back
+        </button>
+
         <h1 className="text-2xl font-bold mb-4">Profile Management</h1>
 
         {/* Display Selected Profile Icon */}
         <div className="flex flex-col items-center mb-6">
-          {/* <h2 className="text-lg text-gray-500 font-semibold mb-2">Your Profile Icon</h2> */}
           {selectedIconSrc && (
             <img
               src={selectedIconSrc}
