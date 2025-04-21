@@ -40,24 +40,25 @@ export const createChat = async (
 
   if (members.length <= 2) {
     if (members.length < 2) {
-      res
-        .status(400)
-        .json({
-          success: false,
-          message: "Minimum numbers to create new chat is 2",
-        });
+      res.status(400).json({
+        success: false,
+        message: "Minimum numbers to create new chat is 2",
+      });
       return;
     }
     const chat_name = members.sort().join("-");
 
-    const existingChat = await Chat.findOne({ name: chat_name, isGroupChat: false });
+    const existingChat = await Chat.findOne({
+      name: chat_name,
+      isGroupChat: false,
+    });
 
     if (existingChat) {
-        res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Chat with these members already exists",
-        });
-        return;
+      });
+      return;
     }
 
     name = chat_name;
@@ -193,5 +194,34 @@ export const getUserChats = async (
   } catch (error) {
     console.error("Error fetching chats:", error); // Log error
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const isChatExist = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { members } = req.body;
+
+  if (!members || members.length !== 2) {
+    res.status(400).json({ message: "Invalid members field" });
+    return;
+  }
+
+  const chat_name = members.sort().join("-");
+  try {
+    const existingChat = await Chat.findOne({
+      name: chat_name,
+      isGroupChat: false,
+    });
+    if (existingChat) {
+      res.status(200).json({ isExist: true });
+      return;
+    } else {
+      res.status(200).json({ isExist: false });
+      return;
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
 };

@@ -6,10 +6,10 @@ import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 
 export interface User {
-    _id: string;
-    username: string;
-    email:string;
-    profileIcon: string;
+  _id: string;
+  username: string;
+  email: string;
+  profileIcon: string;
 }
 
 interface NavBarProps {
@@ -34,7 +34,10 @@ const NavBar: React.FC<NavBarProps> = (user) => {
 
   return (
     <div className="flex justify-between items-center p-4 w-full h-full">
-      <div className="text-2xl font-bold">3-Way Chat</div>
+      <div className="flex items-center gap-2 h-full">
+        <img src="/logo.png" className="h-full"></img>
+        <div className="text-2xl font-bold">3-Way Chat</div>
+      </div>
       <div className="flex gap-4 items-center">
         <div className="flex gap-4">
           <Link href="/general">
@@ -50,7 +53,9 @@ const NavBar: React.FC<NavBarProps> = (user) => {
         {user.user ? (
           <div className="relative">
             <img
-              src={icons.find((icon) => icon.id === user.user?.profileIcon)?.src}
+              src={
+                icons.find((icon) => icon.id === user.user?.profileIcon)?.src
+              }
               className="w-10 h-10 rounded-full"
               onClick={toggleDropdown}
             />
