@@ -25,6 +25,8 @@ export default function GroupCard({ chat }: { chat: Chat}) {
     const [membersUsername, setMembersUsername] = useState<Map<string, string>>(new Map());
     const [openDialog, setOpenDialog] = useState(false);
 
+    const router = useRouter()
+
     const addMember = () => {
         const fetchUserAndUpdateMember = async () => {
             try {
@@ -46,6 +48,7 @@ export default function GroupCard({ chat }: { chat: Chat}) {
 
             } catch (err: any) {
                 console.log("server error:", err.response?.data?.message || err.message);
+                router.push('/login')
             }
         };
 
