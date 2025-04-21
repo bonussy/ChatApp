@@ -10,6 +10,8 @@ import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messageRouts";
 import chatRoutes from "./routes/chatRoutes";
 
+import { Request, Response } from 'express';
+
 // Load environment variables
 dotenv.config();
 
@@ -43,7 +45,7 @@ let onlineUsers: { [key: string]: string } = {};
 initializeSocket(server, onlineUsers);
 
 // Endpoint to get online users
-app.get("/api/online-users", (req, res) => {
+app.get("/api/online-users", (req: Request, res: Response) => {
   res.json({ onlineUsers: Object.values(onlineUsers) });
 });
 
