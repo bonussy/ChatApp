@@ -30,6 +30,15 @@ export default function LoginPage(){
       );
 
       console.log("Login successful:", response.data);
+
+      // 🔁 รอ ping /me ให้แน่ใจว่า cookie ทำงานแล้ว
+      const meResponse = await axios.get(`${API_URL}/api/auth/me`, {
+        withCredentials: true,
+      });
+
+      console.log("User verified:", meResponse.data);
+
+
       router.push("/general"); // Redirect to general chat page
     } catch (err: any) {
       console.error("Login failed:", err.response?.data?.message || err.message);
