@@ -39,7 +39,10 @@ export default function GeneralPage() {
         setUserId(response.data.user._id); // Set user ID
         console.log("User fetched successfully:", response.data.user);
       } catch (err: any) {
-        console.log("Failed to fetch user:", err.response?.data?.message || err.message);
+        console.log(
+          "Failed to fetch user:",
+          err.response?.data?.message || err.message
+        );
         router.push("/login");
       }
     };
@@ -66,7 +69,7 @@ export default function GeneralPage() {
     }
   }, [userId]);
 
-  const updateChatDetails = (chat:Chat) => {
+  const updateChatDetails = (chat: Chat) => {
     setChatId(chat._id);
     setChatName(chat.name);
     setChatMemberCount(chat.memberCount);
