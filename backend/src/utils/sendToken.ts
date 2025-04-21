@@ -17,8 +17,8 @@ export const sendTokenAsCookie = (
         .status(statusCode)
         .cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000, // 1 วัน
         })
         .json({ sucess: true, token });
