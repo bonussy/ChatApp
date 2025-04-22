@@ -14,12 +14,6 @@ interface userDataToEmit {
   profileIcon: string;
 }
 
-const tmpUser = {
-  id: "67f51e73d4ced39b88e4cb85",
-  username: "jannie",
-  profileIcon: "icon4",
-};
-
 export default function GlobalPage() {
   const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
@@ -28,7 +22,7 @@ export default function GlobalPage() {
     null
   );
   const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
-  const [selectedUser, setSelectedUser] = useState<userDataToEmit | null>(tmpUser);
+  const [selectedUser, setSelectedUser] = useState<userDataToEmit | null>(null);
 
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
@@ -135,7 +129,7 @@ export default function GlobalPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} />
+          <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} setPingUser={(user:userDataToEmit|null)=>setSelectedUser(user)}/>
         </div>
         {selectedUser ?  
           <ChatSection

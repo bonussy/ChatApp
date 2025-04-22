@@ -61,7 +61,7 @@ return (
     <div className="flex flex-1 flex-col h-full w-3/4 bg-white rounded-xl">
         <div className="flex items-center p-4 border-b border-gray-200 text-xl font-bold">
           { (chatId != "global") ? <BsFillPeopleFill className="inline-block mr-2" /> : <FaGlobeAsia className="inline-block mr-2" />}
-          { (chatId.substring(0, 4)) ? "Ping Chat | " : "" }
+          { (chatId.substring(0, 4)=='Ping') ? "Ping Chat | " : "" }
           { (chatId != "global") ? `${chatName} ${ isGroupChat ? "(" + chatMemberCount + ")" : ""}` : "Global Chat"}
         </div>
         <ChatMessages 
