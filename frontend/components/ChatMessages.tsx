@@ -63,6 +63,7 @@ export default function ChatMessages({
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [targetMessageIdx, setTargetMessageIdx] = useState<string | null>(null);
+  const emojiPickerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,6 +101,26 @@ export default function ChatMessages({
     setShowEmojiPicker(false);
     setTargetMessageIdx(null);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+        setTargetMessageIdx(null);
+      }
+    };
+  
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+  
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   return (
     <div className="flex flex-col h-full gap-4 px-6 pt-4 overflow-y-auto flex-1 rounded-xl relative">
@@ -169,7 +190,10 @@ export default function ChatMessages({
 
       {showEmojiPicker && (
         <div className="fixed inset-0 z-50 bg-gray-700/75 transition-opacity flex items-center justify-center">
-          <div className="bg-white rounded-xl p-4">
+          <div
+            ref={emojiPickerRef}
+            className="bg-white rounded-xl p-4"
+          >
             <EmojiPicker onEmojiClick={handleEmojiClick} />
           </div>
         </div>
