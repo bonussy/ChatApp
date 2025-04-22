@@ -14,6 +14,12 @@ interface userDataToEmit {
   profileIcon: string;
 }
 
+const tmpUser = {
+  id: "67f51e73d4ced39b88e4cb85",
+  username: "jannie",
+  profileIcon: "icon4",
+};
+
 export default function GlobalPage() {
   const { socket } = useSocket();
   const { user, loading, setUser } = useUser(false);
@@ -22,6 +28,7 @@ export default function GlobalPage() {
     null
   );
   const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
+  const [selectedUser, setSelectedUser] = useState<userDataToEmit | null>(tmpUser);
 
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
@@ -130,11 +137,24 @@ export default function GlobalPage() {
         <div className="h-full w-1/4 bg-white rounded-xl">
           <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} />
         </div>
-        <ChatSection
-          userId={userDataToEmit ? userDataToEmit.id : ""}
-          chatId="global"
-          globalUserData={userDataToEmit}
-        />
+        {selectedUser ?  
+          <ChatSection
+            userId={userDataToEmit ? userDataToEmit.id : ""}
+            chatId={
+              userDataToEmit && selectedUser
+                ? "ping" +
+                  [userDataToEmit.id, selectedUser.id].sort().join("")
+                : ""
+            }
+            globalUserData={userDataToEmit}
+            chatName={selectedUser.username}
+          /> :
+          <ChatSection
+            userId={userDataToEmit ? userDataToEmit.id : ""}
+            chatId="global"
+            globalUserData={userDataToEmit}
+          />
+        }
       </div>
     </div>
   );
