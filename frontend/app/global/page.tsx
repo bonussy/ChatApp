@@ -142,6 +142,7 @@ export default function GlobalPage() {
             }
             globalUserData={userDataToEmit}
             chatName={selectedUser.username}
+            setSelectedUser={setSelectedUser}
           /> :
           <ChatSection
             userId={userDataToEmit ? userDataToEmit.id : ""}

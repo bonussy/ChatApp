@@ -17,7 +17,7 @@ export default function MessageInput({ userId, chatId, globalUserData, onSend }:
 
   const postMessage = async () => {
     try {
-      if (chatId !== "global") {
+      if (chatId !== "global" && chatId.substring(0, 4) !== "ping") {
         const response = await axios.post(`${API_URL}/api/messages`, {
           senderId: userId,
           chatId: chatId,
@@ -36,7 +36,7 @@ export default function MessageInput({ userId, chatId, globalUserData, onSend }:
             username: globalUserData.username,
             profileIcon: globalUserData.profileIcon,
           },
-          chat: "global",
+          chat: chatId,
           text: text,
           timestamp: new Date(),
           reactions: {},
