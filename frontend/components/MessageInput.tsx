@@ -67,7 +67,7 @@ export default function MessageInput({ userId, chatId, globalUserData, onSend }:
         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
       />
       <button
-        className="bg-black text-white rounded-xl px-2 py-2"
+        className="bg-black text-white rounded-xl px-2 py-2 hover:cursor-pointer"
         onClick={handleSend}
       >
         <LuSend />

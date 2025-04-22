@@ -149,7 +149,7 @@ export default function SearchPage() {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <button className="h-full border text-white text-lg font-semibold px-4 py-2 rounded-lg bg-red-500" onClick={handleOpenDialog}>
+          <button className="h-full border text-white text-lg font-semibold px-4 py-2 rounded-lg bg-red-500 hover:cursor-pointer hover:bg-red-600 hover:border-red-900 hover-border-2" onClick={handleOpenDialog}>
             Create Group
           </button>
         </div>

@@ -78,7 +78,7 @@ export default function GroupCard({ chat }: { chat: Chat}) {
 
     return (
         <>
-        <div className="border rounded-lg p-6 space-y-4 justify-items-center min-w-40 hover:shadow-lg" 
+        <div className="border rounded-lg p-6 space-y-4 justify-items-center min-w-40 hover:shadow-lg hover:cursor-pointer" 
         onClick={() => setOpenDialog(true)}>
             <img
                 src={groups.find((icon) => icon.id === chat.groupIcon)?.src}
