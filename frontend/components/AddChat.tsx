@@ -44,7 +44,14 @@ const AddChat = ({
   };
 
   if (isChatExist) {
-    return null; // Don't show the button if the chat already exists
+    return (
+      <div
+        className="ml-4 text-gray-500 cursor-pointer"
+        onClick={() => router.push("/general")}
+      >
+        →
+      </div>
+    )
   } else {
     return (
       <div

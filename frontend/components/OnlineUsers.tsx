@@ -10,6 +10,7 @@ interface userDataToEmit {
 interface OnlineUserProp {
   onlineUsers: userDataToEmit[];
   currentUser: userDataToEmit | null;
+  setPingUser: Function
 }
 
 const icons = [
@@ -23,6 +24,7 @@ const icons = [
 const OnlineUsers: React.FC<OnlineUserProp> = ({
   onlineUsers,
   currentUser,
+  setPingUser,
 }) => {
   const seenUsers = new Set();
   console.log("Online Users:", onlineUsers);
@@ -53,10 +55,10 @@ const OnlineUsers: React.FC<OnlineUserProp> = ({
                 </div>
                 <div className="ml-3">{user.username} {user.id == currentUser?.id ? " (You)" : ""}</div>
               </div>
-              {currentUser?.id?.includes("Guest") || (user.id == currentUser?.id) ? null : user?.id?.includes(
-                  "Guest"
-                ) ? null : (
-                <AddChat currentUser={currentUser?.id} parentUser={user.id} />
+              {(user.id == currentUser?.id) ? null : (user?.id?.includes(
+                  "Guest") || currentUser?.id?.includes("Guest"))?
+                  <div className="ml-4 text-gray-500 cursor-pointer" onClick={()=>setPingUser(user)}>+</div> : (
+                  <AddChat currentUser={currentUser?.id} parentUser={user.id}/>
               )}
             </div>
           );

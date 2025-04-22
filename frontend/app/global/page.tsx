@@ -22,6 +22,7 @@ export default function GlobalPage() {
     null
   );
   const [onlineUsers, setOnlineUsers] = useState<userDataToEmit[]>([]);
+  const [selectedUser, setSelectedUser] = useState<userDataToEmit | null>(null);
 
   useEffect(() => {
     const fetchUserAndEmitUsername = async () => {
@@ -128,13 +129,27 @@ export default function GlobalPage() {
       </div>
       <div className="flex flex-1 w-full gap-4 overflow-hidden">
         <div className="h-full w-1/4 bg-white rounded-xl">
-          <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} />
+          <OnlineUsers onlineUsers={onlineUsers} currentUser={userDataToEmit} setPingUser={(user:userDataToEmit|null)=>setSelectedUser(user)}/>
         </div>
-        <ChatSection
-          userId={userDataToEmit ? userDataToEmit.id : ""}
-          chatId="global"
-          globalUserData={userDataToEmit}
-        />
+        {selectedUser ?  
+          <ChatSection
+            userId={userDataToEmit ? userDataToEmit.id : ""}
+            chatId={
+              userDataToEmit && selectedUser
+                ? "ping" +
+                  [userDataToEmit.id, selectedUser.id].sort().join("")
+                : ""
+            }
+            globalUserData={userDataToEmit}
+            chatName={selectedUser.username}
+            setSelectedUser={setSelectedUser}
+          /> :
+          <ChatSection
+            userId={userDataToEmit ? userDataToEmit.id : ""}
+            chatId="global"
+            globalUserData={userDataToEmit}
+          />
+        }
       </div>
     </div>
   );
