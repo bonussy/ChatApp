@@ -38,16 +38,16 @@ const NavBar: React.FC<NavBarProps> = (user) => {
         <img src="/logo.png" className="h-full"></img>
         <div className="text-2xl font-bold">3-Way Chat</div>
       </div>
-      <div className="flex gap-4 items-center">
-        <div className="flex gap-4">
+      <div className="flex gap-6 items-center">
+        <div className="flex gap-6">
           <Link href="/general">
-            <div className="hover:underline">general chat</div>
+            <div className="hover:underline font-semibold border border-white hover:border-black px-4 py-1 rounded-xl">general chat</div>
           </Link>
           <Link href="/global">
-            <div className="hover:underline">global chat</div>
+            <div className="hover:underline font-semibold border border-white hover:border-black px-4 py-1 rounded-xl">global chat</div>
           </Link>
           <Link href="/search">
-            <div className="hover:underline">search</div>
+            <div className="hover:underline font-semibold border border-white hover:border-black px-4 py-1 rounded-xl">search</div>
           </Link>
         </div>
         {user.user ? (
