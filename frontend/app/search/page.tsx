@@ -110,7 +110,8 @@ export default function SearchPage() {
         const response = await axios.post(`${API_URL}/api/chat`,{
           name:groupName,
           members,
-          isGroupChat:true
+          isGroupChat:true,
+          groupIcon:selectedIcon
         });
         console.log(response.data)
         console.log(response.data.chat)
